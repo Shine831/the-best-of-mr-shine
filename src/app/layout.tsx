@@ -121,8 +121,25 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id=GTM-5FVZRSKR'+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5FVZRSKR');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
       </head>
       <body className="bg-black text-zinc-100 antialiased font-sans overflow-x-hidden relative">
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5FVZRSKR"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
+        {/* End GTM (noscript) */}
         <GrainOverlay />
         <AmbientLight />
         <div className="relative z-10">
