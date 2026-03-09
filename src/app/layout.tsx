@@ -121,7 +121,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-       head>
+      </head>
       <body className="bg-black text-zinc-100 antialiased font-sans overflow-x-hidden relative">
         <GrainOverlay />
         <AmbientLight />
