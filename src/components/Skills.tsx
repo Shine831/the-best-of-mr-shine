@@ -20,122 +20,23 @@ const skills = [
   { label: "Notion", color: "border-zinc-700/50" },
 ];
 
+/**
+ * Visual-only component for the badges.
+ * Receives position from the central physics coordinator.
+ */
 function FloatingBadge({
   skill,
-  containerRef,
   color,
+  x,
+  y,
 }: {
   skill: string;
-  containerRef: React.RefObject<HTMLDivElement | null>;
   color: string;
+  x: any;
+  y: any;
 }) {
-  const badgeRef = useRef<HTMLDivElement>(null);
-  
-  // Velocity and Internal Position tracked for the physics loop
-  const velocity = useRef({ x: 0, y: 0 });
-  const internalPos = useRef({ x: 0, y: 0 });
-  const mousePos = useRef({ x: 0, y: 0 });
-  
-  // Motion values for visual update
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const FRICTION = 0.8;
-  const ELASTICITY = 0.5;
-  const REPULSION_STRENGTH = 400;
-  const REPULSION_RADIUS = 250;
-  
-  // Container boundaries (will be updated on mount/resize)
-  const bounds = useRef({ minX: -200, maxX: 200, minY: -150, maxY: 150 });
-
-  useEffect(() => {
-    // Initial random position
-    internalPos.current = {
-      x: (Math.random() - 0.5) * 350,
-      y: (Math.random() - 0.5) * 200
-    };
-    
-    const updateBounds = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        bounds.current = {
-          minX: -rect.width / 2 + 60,
-          maxX: rect.width / 2 - 60,
-          minY: -rect.height / 2 + 30,
-          maxY: rect.height / 2 - 30,
-        };
-      }
-    };
-
-    updateBounds();
-    window.addEventListener("resize", updateBounds);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        mousePos.current = {
-          x: e.clientX - (rect.left + rect.width / 2),
-          y: e.clientY - (rect.top + rect.height / 2),
-        };
-      }
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("resize", updateBounds);
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, [containerRef]);
-
-  useAnimationFrame(() => {
-    // 1. Repulsion from mouse
-    const dx = internalPos.current.x - mousePos.current.x;
-    const dy = internalPos.current.y - mousePos.current.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance < REPULSION_RADIUS && distance > 1) {
-      const force = (REPULSION_STRENGTH / distance) * (1 - distance / REPULSION_RADIUS);
-      velocity.current.x += (dx / distance) * force;
-      velocity.current.y += (dy / distance) * force;
-    }
-
-    // 2. Perpetual "Wander" force (organic movement)
-    velocity.current.x += (Math.random() - 0.5) * 0.2;
-    velocity.current.y += (Math.random() - 0.5) * 0.2;
-
-    // 3. Apply Friction
-    velocity.current.x *= FRICTION;
-    velocity.current.y *= FRICTION;
-
-    // 4. Update Position
-    internalPos.current.x += velocity.current.x;
-    internalPos.current.y += velocity.current.y;
-
-    // 5. Hard Boundaries / Elasticity
-    if (internalPos.current.x < bounds.current.minX) {
-      internalPos.current.x = bounds.current.minX;
-      velocity.current.x *= -ELASTICITY;
-    } else if (internalPos.current.x > bounds.current.maxX) {
-      internalPos.current.x = bounds.current.maxX;
-      velocity.current.x *= -ELASTICITY;
-    }
-
-    if (internalPos.current.y < bounds.current.minY) {
-      internalPos.current.y = bounds.current.minY;
-      velocity.current.y *= -ELASTICITY;
-    } else if (internalPos.current.y > bounds.current.maxY) {
-      internalPos.current.y = bounds.current.maxY;
-      velocity.current.y *= -ELASTICITY;
-    }
-
-    // 6. Push to motion values (React sync)
-    x.set(internalPos.current.x);
-    y.set(internalPos.current.y);
-  });
-
   return (
     <motion.div
-      ref={badgeRef}
       style={{
         x,
         y,
@@ -145,7 +46,7 @@ function FloatingBadge({
         translateX: "-50%",
         translateY: "-50%",
       }}
-      className={`px-5 py-2.5 rounded-full bg-zinc-950/80 border ${color} text-zinc-300 font-sans text-sm whitespace-nowrap shadow-lg flex items-center justify-center cursor-default hover:text-zinc-50 hover:bg-zinc-900 transition-colors duration-300 backdrop-blur-md`}
+      className={`px-5 py-2.5 rounded-full bg-zinc-950/80 border ${color} text-zinc-300 font-sans text-sm whitespace-nowrap shadow-lg flex items-center justify-center cursor-default hover:text-zinc-50 hover:bg-zinc-900 transition-all duration-300 backdrop-blur-md`}
     >
       {skill}
     </motion.div>
@@ -154,6 +55,104 @@ function FloatingBadge({
 
 export default function Skills() {
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Create motion values once
+  const motionValues = useRef(skills.map(() => ({ x: useMotionValue(0), y: useMotionValue(0) })));
+  
+  // Physics State (Mutable refs for performance)
+  const physics = useRef(skills.map(() => ({
+    x: (Math.random() - 0.5) * 400,
+    y: (Math.random() - 0.5) * 300,
+    vx: 0,
+    vy: 0,
+    radius: 60 // Approximate radius for collision
+  })));
+
+  const mouseRef = useRef({ x: 10000, y: 10000 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      mouseRef.current = {
+        x: e.clientX - (rect.left + rect.width / 2),
+        y: e.clientY - (rect.top + rect.height / 2),
+      };
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useAnimationFrame(() => {
+    if (typeof window === "undefined") return;
+
+    const FRICTION = 0.85;
+    const MOUSE_REPULSION = 400;
+    const MOUSE_RADIUS = 250;
+    const COLLISION_REPULSION = 1.2; // 120% as requested
+    const MIN_GAP = 25; // 20px gap + padding
+    const ORBIT_RADIUS = 300; // Circular boundary
+
+    for (let i = 0; i < physics.current.length; i++) {
+      const b = physics.current[i];
+
+      // 1. Mouse Repulsion
+      const mdx = b.x - mouseRef.current.x;
+      const mdy = b.y - mouseRef.current.y;
+      const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+      
+      if (mDist < MOUSE_RADIUS && mDist > 1) {
+        const force = (MOUSE_REPULSION / mDist) * (1 - mDist / MOUSE_RADIUS);
+        b.vx += (mdx / mDist) * force;
+        b.vy += (mdy / mDist) * force;
+      }
+
+      // 2. Inter-badge Collision (Mutual Repulsion)
+      for (let j = i + 1; j < physics.current.length; j++) {
+        const b2 = physics.current[j];
+        const dx = b2.x - b.x;
+        const dy = b2.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = b.radius + b2.radius + MIN_GAP;
+
+        if (dist < minDist && dist > 1) {
+          const overlap = minDist - dist;
+          // Apply 120% force to resolve overlap
+          const fx = (dx / dist) * overlap * COLLISION_REPULSION * 0.1;
+          const fy = (dy / dist) * overlap * COLLISION_REPULSION * 0.1;
+          
+          b.vx -= fx;
+          b.vy -= fy;
+          b2.vx += fx;
+          b2.vy += fy;
+        }
+      }
+
+      // 3. Circular Boundary Orbit
+      const distFromCenter = Math.sqrt(b.x * b.x + b.y * b.y);
+      if (distFromCenter > ORBIT_RADIUS) {
+        const cx = -b.x / distFromCenter;
+        const cy = -b.y / distFromCenter;
+        const pull = (distFromCenter - ORBIT_RADIUS) * 0.2;
+        b.vx += cx * pull;
+        b.vy += cy * pull;
+      }
+
+      // 4. Wander & Physics Integration
+      b.vx += (Math.random() - 0.5) * 0.2;
+      b.vy += (Math.random() - 0.5) * 0.2;
+      
+      b.vx *= FRICTION;
+      b.vy *= FRICTION;
+      
+      b.x += b.vx;
+      b.y += b.vy;
+
+      // 5. Update Motion Values for Render
+      motionValues.current[i].x.set(b.x);
+      motionValues.current[i].y.set(b.y);
+    }
+  });
 
   return (
     <section className="relative py-24 overflow-hidden flex flex-col items-center justify-center bg-black">
@@ -169,18 +168,26 @@ export default function Skills() {
         </p>
       </div>
 
-      {/* Desktop: floating canvas */}
+      {/* Desktop: Coordinated Floating Canvas */}
       <div
         ref={containerRef}
-        className="relative hidden md:flex w-full max-w-5xl h-[480px] items-center justify-center border border-zinc-900/50 rounded-3xl bg-zinc-950/20 backdrop-blur-sm overflow-hidden mx-auto"
+        className="relative hidden md:flex w-full max-w-5xl h-[600px] items-center justify-center border border-zinc-900/50 rounded-full bg-zinc-950/20 backdrop-blur-sm overflow-hidden mx-auto"
       >
-        <div className="absolute w-40 h-40 bg-zinc-800/10 rounded-full blur-[80px] pointer-events-none" />
+        {/* Invisible orbital guide circle faintly visible */}
+        <div className="absolute inset-4 rounded-full border border-zinc-900/10 pointer-events-none" />
+        
         {skills.map((s, i) => (
-          <FloatingBadge key={i} skill={s.label} color={s.color} containerRef={containerRef} />
+          <FloatingBadge 
+            key={i} 
+            skill={s.label} 
+            color={s.color} 
+            x={motionValues.current[i].x} 
+            y={motionValues.current[i].y} 
+          />
         ))}
       </div>
 
-      {/* Mobile: responsive grid */}
+      {/* Mobile: Static Grid */}
       <div className="md:hidden flex flex-wrap gap-3 justify-center max-w-sm mx-auto px-4">
         {skills.map((s, i) => (
           <motion.span
@@ -198,3 +205,4 @@ export default function Skills() {
     </section>
   );
 }
+
