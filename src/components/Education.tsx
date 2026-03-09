@@ -1,10 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { GraduationCap, Award } from "lucide-react";
 import StaggeredText from "./StaggeredText";
 import EmergingText from "./EmergingText";
 import GlintText from "./GlintText";
+
+function EducationItem({ title, institution, period, icon }: { title: string, institution: string, period: string, icon: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center center", "end start"]
+  });
+
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1, 0.5]);
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.8 } }
+  };
+
+  return (
+    <motion.div 
+      ref={ref}
+      variants={itemVariants}
+      style={{ scale, opacity }}
+      className="group relative flex items-start gap-6 rounded-2xl p-6 transition-colors hover:bg-zinc-900/40"
+    >
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zinc-800 bg-black text-zinc-500 transition-colors group-hover:border-zinc-500 group-hover:text-zinc-100">
+        {icon}
+      </div>
+      <div className="space-y-2">
+        <h3 className="font-serif text-2xl font-semibold text-zinc-400 transition-colors group-hover:text-zinc-50">
+          {title}
+        </h3>
+        <p className="font-sans font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
+          {institution}
+        </p>
+        <p className="text-sm font-mono text-zinc-600 transition-colors group-hover:text-zinc-400">
+          {period}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Education() {
   return (
@@ -25,53 +66,35 @@ export default function Education() {
         />
       </motion.div>
 
-      <div className="space-y-12">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="group relative flex items-start gap-6 rounded-2xl p-6 transition-colors hover:bg-zinc-900/40"
-        >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zinc-800 bg-black text-zinc-500 transition-colors group-hover:border-zinc-500 group-hover:text-zinc-100">
-            <GraduationCap className="h-5 w-5" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="font-serif text-2xl font-semibold text-zinc-400 transition-colors group-hover:text-zinc-50">
-              BTS Génie Informatique (Génie Logiciel)
-            </h3>
-            <p className="font-sans font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
-              Institut Universitaire des Leaders, Douala
-            </p>
-            <p className="text-sm font-mono text-zinc-600 transition-colors group-hover:text-zinc-400">
-              2023 RECRUITMENT — 2025 DEPLOYMENT
-            </p>
-          </div>
-        </motion.div>
+      <motion.div 
+        className="space-y-12"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        variants={{
+          hidden: { opacity: 0 },
+          show: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.2
+            }
+          }
+        }}
+      >
+        <EducationItem 
+          title="BTS Génie Informatique (Génie Logiciel)"
+          institution="Institut Universitaire des Leaders, Douala"
+          period="2023 RECRUITMENT — 2025 DEPLOYMENT"
+          icon={<GraduationCap className="h-5 w-5" />}
+        />
 
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="group relative flex items-start gap-6 rounded-2xl p-6 transition-colors hover:bg-zinc-900/40"
-        >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zinc-800 bg-black text-zinc-500 transition-colors group-hover:border-zinc-500 group-hover:text-zinc-100">
-            <Award className="h-5 w-5" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="font-serif text-2xl font-semibold text-zinc-400 transition-colors group-hover:text-zinc-50">
-              GCE A LEVEL
-            </h3>
-            <p className="font-sans font-medium text-zinc-500 transition-colors group-hover:text-zinc-300">
-              Lycée Bilingue de Nyalla
-            </p>
-            <p className="text-sm font-mono text-zinc-600 transition-colors group-hover:text-zinc-400">
-              2022 — 2023
-            </p>
-          </div>
-        </motion.div>
-      </div>
+        <EducationItem 
+          title="GCE A LEVEL"
+          institution="Lycée Bilingue de Nyalla"
+          period="2022 — 2023"
+          icon={<Award className="h-5 w-5" />}
+        />
+      </motion.div>
     </section>
   );
 }
