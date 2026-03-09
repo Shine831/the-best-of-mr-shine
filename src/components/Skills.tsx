@@ -3,6 +3,7 @@
 import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
 import StaggeredText from "./StaggeredText";
+import GlintText from "./GlintText";
 
 const skills = [
   { label: "MySQL", color: "border-blue-900/50" },
@@ -157,10 +158,12 @@ export default function Skills() {
   return (
     <section className="relative py-24 overflow-hidden flex flex-col items-center justify-center bg-black">
       <div className="z-10 mb-16 text-center space-y-4 px-6">
-        <StaggeredText
-          text="Arsenal Technique"
-          className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center drop-shadow-md"
-        />
+        <GlintText>
+          <StaggeredText
+            text="Arsenal Technique"
+            className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center drop-shadow-md"
+          />
+        </GlintText>
         <p className="font-sans text-zinc-400 max-w-2xl mx-auto text-sm md:text-base">
           Technologies maîtrisées, réagissant à la physique de l&apos;environnement.
         </p>

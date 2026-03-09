@@ -4,6 +4,7 @@ import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } fr
 import { useRef } from "react";
 import StaggeredText from "./StaggeredText";
 import EmergingText from "./EmergingText";
+import GlintText from "./GlintText";
 
 const experiences = [
   {
@@ -98,7 +99,9 @@ export default function Experience() {
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         className="mb-20 text-center space-y-4"
       >
-        <StaggeredText text="Archives Opérationnelles" className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center" />
+        <GlintText>
+          <StaggeredText text="Archives Opérationnelles" className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center" />
+        </GlintText>
         <EmergingText 
           text="Chronologie des déploiements et ingénierie de pointe. Chaque projet est un jalon de résilience." 
           className="font-sans text-zinc-400" 

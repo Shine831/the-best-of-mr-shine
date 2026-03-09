@@ -32,10 +32,12 @@ export default function Hero() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="space-y-4 w-full"
         >
-          <StaggeredText
-            text="THE BEST OF MR SHINE"
-            className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] justify-center leading-tight"
-          />
+          <GlintText>
+            <StaggeredText
+              text="THE BEST OF MR SHINE"
+              className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-zinc-50 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] justify-center leading-tight"
+            />
+          </GlintText>
 
           <h2 className="font-sans text-base sm:text-xl md:text-2xl text-zinc-400 font-light tracking-wide max-w-3xl mx-auto">
             Jean Claude Schimit Baha
