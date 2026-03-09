@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+}
+
+@layer base {
+  body {
+    @apply bg-black text-zinc-100 antialiased font-sans selection:bg-zinc-800 selection:text-white;
+  }
+}
