@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useSpring, useMotionValue } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
+import { useRef, useState, useEffect, useCallback } from "react";
 import StaggeredText from "./StaggeredText";
 
 const skills = [
@@ -29,89 +29,124 @@ function FloatingBadge({
   color: string;
 }) {
   const badgeRef = useRef<HTMLDivElement>(null);
-  // Start at 0/0 on both server and client to avoid hydration mismatch.
-  // Random positions are assigned only in useEffect (client-only).
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const floatDurationRef = useRef(3);
+  
+  // Velocity and Internal Position tracked for the physics loop
+  const velocity = useRef({ x: 0, y: 0 });
+  const internalPos = useRef({ x: 0, y: 0 });
+  const mousePos = useRef({ x: 0, y: 0 });
+  
+  // Motion values for visual update
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  const floatX = useMotionValue(0);
-  const floatY = useMotionValue(0);
-
-  const springConfig = { damping: 18, stiffness: 80, mass: 1.2 };
-  const repelledX = useSpring(floatX, springConfig);
-  const repelledY = useSpring(floatY, springConfig);
-
-  useEffect(() => {
-    // Randomize only on the client after hydration
-    const initX = (Math.random() - 0.5) * 380;
-    const initY = (Math.random() - 0.5) * 220;
-    floatDurationRef.current = 2 + Math.random() * 3;
-    setPosition({ x: initX, y: initY });
-    floatX.set(initX);
-    floatY.set(initY);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const FRICTION = 0.8;
+  const ELASTICITY = 0.5;
+  const REPULSION_STRENGTH = 400;
+  const REPULSION_RADIUS = 250;
+  
+  // Container boundaries (will be updated on mount/resize)
+  const bounds = useRef({ minX: -200, maxX: 200, minY: -150, maxY: 150 });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newX = position.x + (Math.random() - 0.5) * 60;
-      const newY = position.y + (Math.random() - 0.5) * 40;
-      const boundedX = Math.max(-240, Math.min(240, newX));
-      const boundedY = Math.max(-160, Math.min(160, newY));
-      setPosition({ x: boundedX, y: boundedY });
-      floatX.set(boundedX);
-      floatY.set(boundedY);
-    }, 3500 + Math.random() * 1000);
-    return () => clearInterval(interval);
-  }, [position, floatX, floatY]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current || !badgeRef.current) return;
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const badgeRect = badgeRef.current.getBoundingClientRect();
-      const mouseX = e.clientX - containerRect.left;
-      const mouseY = e.clientY - containerRect.top;
-      const badgeCenterX = badgeRect.left - containerRect.left + badgeRect.width / 2;
-      const badgeCenterY = badgeRect.top - containerRect.top + badgeRect.height / 2;
-      const deltaX = badgeCenterX - mouseX;
-      const deltaY = badgeCenterY - mouseY;
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      const repulsionRadius = 200;
-      if (distance < repulsionRadius && distance > 0) {
-        const force = (repulsionRadius - distance) / repulsionRadius;
-        floatX.set(position.x + (deltaX / distance) * force * 160);
-        floatY.set(position.y + (deltaY / distance) * force * 120);
-      } else {
-        floatX.set(position.x);
-        floatY.set(position.y);
+    // Initial random position
+    internalPos.current = {
+      x: (Math.random() - 0.5) * 350,
+      y: (Math.random() - 0.5) * 200
+    };
+    
+    const updateBounds = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        bounds.current = {
+          minX: -rect.width / 2 + 60,
+          maxX: rect.width / 2 - 60,
+          minY: -rect.height / 2 + 30,
+          maxY: rect.height / 2 - 30,
+        };
       }
     };
-    const container = containerRef.current;
-    if (container) container.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      if (container) container.removeEventListener("mousemove", handleMouseMove);
+
+    updateBounds();
+    window.addEventListener("resize", updateBounds);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        mousePos.current = {
+          x: e.clientX - (rect.left + rect.width / 2),
+          y: e.clientY - (rect.top + rect.height / 2),
+        };
+      }
     };
-  }, [containerRef, position, floatX, floatY]);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("resize", updateBounds);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [containerRef]);
+
+  useAnimationFrame(() => {
+    // 1. Repulsion from mouse
+    const dx = internalPos.current.x - mousePos.current.x;
+    const dy = internalPos.current.y - mousePos.current.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < REPULSION_RADIUS && distance > 1) {
+      const force = (REPULSION_STRENGTH / distance) * (1 - distance / REPULSION_RADIUS);
+      velocity.current.x += (dx / distance) * force;
+      velocity.current.y += (dy / distance) * force;
+    }
+
+    // 2. Perpetual "Wander" force (organic movement)
+    velocity.current.x += (Math.random() - 0.5) * 0.2;
+    velocity.current.y += (Math.random() - 0.5) * 0.2;
+
+    // 3. Apply Friction
+    velocity.current.x *= FRICTION;
+    velocity.current.y *= FRICTION;
+
+    // 4. Update Position
+    internalPos.current.x += velocity.current.x;
+    internalPos.current.y += velocity.current.y;
+
+    // 5. Hard Boundaries / Elasticity
+    if (internalPos.current.x < bounds.current.minX) {
+      internalPos.current.x = bounds.current.minX;
+      velocity.current.x *= -ELASTICITY;
+    } else if (internalPos.current.x > bounds.current.maxX) {
+      internalPos.current.x = bounds.current.maxX;
+      velocity.current.x *= -ELASTICITY;
+    }
+
+    if (internalPos.current.y < bounds.current.minY) {
+      internalPos.current.y = bounds.current.minY;
+      velocity.current.y *= -ELASTICITY;
+    } else if (internalPos.current.y > bounds.current.maxY) {
+      internalPos.current.y = bounds.current.maxY;
+      velocity.current.y *= -ELASTICITY;
+    }
+
+    // 6. Push to motion values (React sync)
+    x.set(internalPos.current.x);
+    y.set(internalPos.current.y);
+  });
 
   return (
     <motion.div
       ref={badgeRef}
       style={{
-        x: repelledX,
-        y: repelledY,
+        x,
+        y,
         position: "absolute",
-        left: "calc(50% - 56px)",
-        top: "calc(50% - 20px)",
+        left: "50%",
+        top: "50%",
+        translateX: "-50%",
+        translateY: "-50%",
       }}
-      className={`px-5 py-2.5 rounded-full bg-zinc-950 border ${color} text-zinc-300 font-sans text-sm whitespace-nowrap shadow-lg flex items-center justify-center cursor-default hover:text-zinc-50 hover:bg-zinc-900 transition-colors duration-300`}
+      className={`px-5 py-2.5 rounded-full bg-zinc-950/80 border ${color} text-zinc-300 font-sans text-sm whitespace-nowrap shadow-lg flex items-center justify-center cursor-default hover:text-zinc-50 hover:bg-zinc-900 transition-colors duration-300 backdrop-blur-md`}
     >
-      <motion.span
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: floatDurationRef.current, repeat: Infinity, ease: "easeInOut" }}
-      >
-        {skill}
-      </motion.span>
+      {skill}
     </motion.div>
   );
 }
