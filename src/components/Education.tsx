@@ -3,18 +3,23 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Award } from "lucide-react";
 import StaggeredText from "./StaggeredText";
+import EmergingText from "./EmergingText";
 
 export default function Education() {
   return (
     <section className="relative py-32 px-6 max-w-4xl mx-auto border-t border-zinc-900/50">
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+        whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         className="mb-16 text-center space-y-4"
       >
         <StaggeredText text="Fondations" className="font-serif text-4xl text-zinc-50 font-bold tracking-wide justify-center" />
-        <p className="font-sans text-zinc-400">Parcours académique et bases structurelles.</p>
+        <EmergingText 
+          text="Parcours académique et bases structurelles. L'origine de la précision logicielle." 
+          className="font-sans text-zinc-400" 
+        />
       </motion.div>
 
       <div className="space-y-12">

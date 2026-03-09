@@ -3,6 +3,7 @@
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import StaggeredText from "./StaggeredText";
+import EmergingText from "./EmergingText";
 
 const experiences = [
   {
@@ -91,13 +92,17 @@ export default function Experience() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-32 bg-gradient-to-b from-transparent to-zinc-800" />
       
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+        whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
         viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         className="mb-20 text-center space-y-4"
       >
         <StaggeredText text="Archives Opérationnelles" className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center" />
-        <p className="font-sans text-zinc-400">Chronologie des déploiements et ingénierie.</p>
+        <EmergingText 
+          text="Chronologie des déploiements et ingénierie de pointe. Chaque projet est un jalon de résilience." 
+          className="font-sans text-zinc-400" 
+        />
       </motion.div>
 
       <div className="flex flex-col gap-12 relative w-full items-center">
@@ -126,9 +131,9 @@ export default function Experience() {
                       <span className="text-zinc-500">{exp.period}</span>
                     </div>
                   </div>
-                  <p className="font-sans text-zinc-400 text-sm leading-relaxed border-t border-zinc-800/50 pt-4">
-                    {exp.description}
-                  </p>
+                  <div className="font-sans text-zinc-400 text-sm leading-relaxed border-t border-zinc-800/50 pt-4">
+                    <EmergingText text={exp.description} />
+                  </div>
                 </div>
               </ReflectionCard>
             </div>

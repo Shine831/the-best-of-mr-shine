@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import AmbientLight from "@/components/AmbientLight";
 import GrainOverlay from "@/components/GrainOverlay";
+import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -140,11 +141,13 @@ export default function RootLayout({
           ></iframe>
         </noscript>
         {/* End GTM (noscript) */}
-        <GrainOverlay />
-        <AmbientLight />
-        <div className="relative z-10">
-          {children}
-        </div>
+        <SmoothScroll>
+          <GrainOverlay />
+          <AmbientLight />
+          <div className="relative z-10">
+            {children}
+          </div>
+        </SmoothScroll>
       </body>
     </html>
   );
