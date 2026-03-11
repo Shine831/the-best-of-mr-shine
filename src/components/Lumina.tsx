@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
-import StaggeredText from "./StaggeredText";
+import { useRef, useState, useEffect } from "react";
 import GlintText from "./GlintText";
+import StaggeredText from "./StaggeredText";
 
 const solutions = [
   { label: "AeroGuard", color: "border-zinc-800" },
@@ -56,20 +56,38 @@ function SolutionBadge({
 export default function Lumina() {
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Create motion values once
-  const motionValues = useRef(solutions.map(() => ({ x: useMotionValue(0), y: useMotionValue(0) })));
+  // Create motion values
+  const m0 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m1 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m2 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m3 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m4 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m5 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m6 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m7 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m8 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m9 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m10 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m11 = { x: useMotionValue(0), y: useMotionValue(0) };
+  
+  const mValues = [m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11];
+  const motionValues = useRef(mValues);
   const [dimensions, setDimensions] = useState({ width: 0, height: 700, orbitRadius: 350 });
   
   // Physics State (Mutable refs for performance)
-  const physics = useRef(solutions.map(() => ({
-    x: (Math.random() - 0.5) * 600,
-    y: (Math.random() - 0.5) * 400,
-    vx: 0,
-    vy: 0,
-    radius: 70 // Approximate radius for collision
-  })));
-
+  const physics = useRef<any[]>([]);
   const mouseRef = useRef({ x: 10000, y: 10000 });
+
+  // Lazy initializer to avoid impurity during render
+  if (physics.current.length === 0) {
+    physics.current = solutions.map(() => ({
+      x: (Math.random() - 0.5) * 600,
+      y: (Math.random() - 0.5) * 400,
+      vx: 0,
+      vy: 0,
+      radius: 70 // Approximate radius for collision
+    }));
+  }
 
   useEffect(() => {
     const handleResize = () => {

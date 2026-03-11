@@ -7,6 +7,15 @@ import { Menu, X } from "lucide-react";
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Prevent scroll when menu is open
+  if (typeof window !== "undefined") {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }
+
   const menuItems = [
     { label: "Archives", href: "/archives" },
     { label: "Lumina", href: "/#hero" },
@@ -20,7 +29,7 @@ export const Header = () => {
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 backdrop-blur-md bg-black/50 border-b border-white/5"
     >
-      <a href="/" className="font-serif text-lg tracking-[0.2em] font-light text-zinc-100 uppercase hover:text-white transition-colors cursor-pointer">
+      <a href="/" className="font-serif text-sm md:text-lg tracking-[0.1em] md:tracking-[0.2em] font-light text-zinc-100 uppercase hover:text-white transition-colors cursor-pointer truncate max-w-[60%] md:max-w-none">
         THE BEST OF MR SHINE
       </a>
       
@@ -53,12 +62,23 @@ export const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 top-[80px] bg-black z-40 flex flex-col items-center justify-center p-8 space-y-12"
+            initial={{ opacity: 0, y: "-100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 bg-black z-[60] flex flex-col items-center justify-center p-8 space-y-12"
           >
+            {/* Mobile Menu Header (to allow closing) */}
+            <div className="absolute top-0 left-0 right-0 p-8 flex justify-between items-center bg-black/50 backdrop-blur-md">
+              <span className="font-serif text-lg tracking-[0.2em] font-light text-zinc-100 uppercase">MENU</span>
+              <button 
+                className="text-zinc-100 p-2 border border-zinc-800 rounded-full"
+                onClick={() => setIsOpen(false)}
+              >
+                <X size={24} />
+              </button>
+            </div>
+
             {menuItems.map((item) => (
               <motion.a
                 key={item.label}

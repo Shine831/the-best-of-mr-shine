@@ -35,7 +35,7 @@ export default function TerminalFooter() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex items-center justify-center gap-4 px-8 py-6 bg-black border border-zinc-800 rounded-sm transition-all duration-500 hover:bg-emerald-950/30 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]"
+            className="group relative flex items-center justify-center gap-4 px-4 md:px-8 py-6 bg-black border border-zinc-800 rounded-sm transition-all duration-500 hover:bg-emerald-950/30 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]"
           >
             <MessageSquare className="w-5 h-5 text-zinc-100 group-hover:text-emerald-400 transition-colors" />
             <span className="font-mono text-[10px] md:text-xs tracking-[0.3em] text-zinc-100 group-hover:text-emerald-100 uppercase transition-colors">
