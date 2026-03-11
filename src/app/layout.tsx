@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, JetBrains_Mono } from "next/font/google";
 import AmbientLight from "@/components/AmbientLight";
 import GrainOverlay from "@/components/GrainOverlay";
 import SmoothScroll from "@/components/SmoothScroll";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -10,8 +11,8 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -26,7 +27,7 @@ const siteConfig = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#020202",
+  themeColor: "#000000",
 };
 
 export const metadata: Metadata = {
@@ -116,7 +117,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="fr" className={`${playfair.variable} ${mono.className} ${mono.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -144,6 +145,7 @@ export default function RootLayout({
         <SmoothScroll>
           <GrainOverlay />
           <AmbientLight />
+          <FloatingWhatsApp />
           <div className="relative z-10">
             {children}
           </div>

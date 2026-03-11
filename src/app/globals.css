@@ -2,11 +2,11 @@
 
 @theme {
   --font-serif: var(--font-playfair);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-mono);
 }
 
 @layer base {
   body {
-    @apply bg-black text-zinc-100 antialiased font-sans selection:bg-zinc-800 selection:text-white;
+    @apply bg-black text-zinc-50 antialiased font-sans selection:bg-zinc-800 selection:text-white;
   }
 }

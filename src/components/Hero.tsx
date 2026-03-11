@@ -40,11 +40,8 @@ export default function Hero() {
             />
           </LiquidSilverGlint>
 
-          <h2 className="font-sans text-base sm:text-xl md:text-2xl text-zinc-400 font-light tracking-wide max-w-3xl mx-auto">
-            Jean Claude Schimit Baha
-            <span className="hidden sm:inline"> — </span>
-            <br className="sm:hidden" />
-            Architecte de Solutions Digitales &amp; Développeur Web.
+          <h2 className="font-sans text-base sm:text-lg md:text-xl text-zinc-400 font-light tracking-[0.2em] max-w-3xl mx-auto uppercase">
+            L&apos;ingénierie de l&apos;éclat
           </h2>
         </motion.div>
 

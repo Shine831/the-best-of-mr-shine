@@ -31,7 +31,7 @@ export default function GlintText({ children, className = "" }: GlintTextProps) 
       <motion.span
         variants={glintVariants}
         style={{
-          backgroundImage: "linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.7) 50%, transparent 60%)",
+          backgroundImage: "linear-gradient(120deg, transparent 45%, rgba(255,255,255,0.8) 50%, transparent 55%)",
           backgroundSize: "200% 100%",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",

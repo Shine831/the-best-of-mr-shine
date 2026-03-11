@@ -8,18 +8,18 @@ import GlintText from "./GlintText";
 
 const experiences = [
   {
-    role: "Développeur WEB Java",
-    company: "KOZAO AFRICA",
-    period: "Juin - Août 2025",
+    role: "Système de Surveillance Autonome",
+    company: "AEROGUARD NEXUS",
+    period: "ÉTUDE_CAS_089",
     description:
-      "Développement d'applications sur JPlatform, implémentation Front/Back, revues de code, tests et documentation technique stricte.",
+      "Ingénierie d'une barrière intelligente autonome pour infrastructures critiques. Architecture NEXUS CORE sur FPGA optimisés. Latence d'analyse -85% vs standard industriel. Précision de classification de 99.98% via vision multi-spectrale.",
   },
   {
-    role: "Ingénierie de GMAO",
-    company: "ASECNA",
-    period: "Juillet - Août 2024",
+    role: "Coffre-fort Numérique Post-Quantique",
+    company: "PRIMEVAULT",
+    period: "INFRA_PV_112",
     description:
-      "Conception de modules CRUD pour la maintenance d'instruments météorologiques, tests et sécurisation via sauvegardes MySQL.",
+      "Infrastructure Zero-Trust de conservation d'actifs pour HNWI. Chiffrement Lattice-based résistant à l'informatique quantique. Isolation physique Air-Gap dynamique et triple authentification biométrique (veineuse).",
   },
 ];
 
@@ -32,11 +32,11 @@ function ReflectionCard({ children }: { children: React.ReactNode }) {
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
 
-  const rotateX = useSpring(useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]));
-  const rotateY = useSpring(useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]));
+  const rotateX = useSpring(useTransform(mouseYSpring, [-0.5, 0.5], ["25deg", "-25deg"]), { stiffness: 300, damping: 20 });
+  const rotateY = useSpring(useTransform(mouseXSpring, [-0.5, 0.5], ["-25deg", "25deg"]), { stiffness: 300, damping: 20 });
 
   // Workaround for useTransform needing a string interpolation
-  const background = useMotionTemplate`radial-gradient(400px circle at ${useTransform(mouseXSpring, (v) => `${(v + 0.5) * 100}%`)} ${useTransform(mouseYSpring, (v) => `${(v + 0.5) * 100}%`)}, rgba(255,255,255,0.1), transparent 80%)`;
+  const background = useMotionTemplate`radial-gradient(400px circle at ${useTransform(mouseXSpring, (v) => `${(v + 0.5) * 100}%`)} ${useTransform(mouseYSpring, (v) => `${(v + 0.5) * 100}%`)}, rgba(255,255,255,0.8), transparent 80%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -79,7 +79,7 @@ function ReflectionCard({ children }: { children: React.ReactNode }) {
           background,
         }}
       />
-      <div style={{ transform: "translateZ(50px)" }} className="relative z-10">
+      <div style={{ transform: "translateZ(100px)" }} className="relative z-10">
         {children}
       </div>
     </motion.div>
@@ -123,12 +123,12 @@ function ExperienceItem({ exp, index }: { exp: any, index: number }) {
           <div className="space-y-4">
             <div className="space-y-1">
               <h3 className="font-sans text-2xl font-semibold text-zinc-100">{exp.role}</h3>
-              <div className="flex items-center justify-between text-zinc-400 text-sm font-medium">
-                <span className="text-zinc-300">{exp.company}</span>
-                <span className="text-zinc-500">{exp.period}</span>
+              <div className="flex items-center justify-between text-zinc-100 text-sm font-medium">
+                <span className="text-zinc-50">{exp.company}</span>
+                <span className="text-zinc-200">{exp.period}</span>
               </div>
             </div>
-            <div className="font-sans text-zinc-400 text-sm leading-relaxed border-t border-zinc-800/50 pt-4">
+            <div className="font-sans text-zinc-100 text-sm leading-relaxed border-t border-zinc-800/50 pt-4">
               <EmergingText text={exp.description} />
             </div>
           </div>
@@ -151,11 +151,11 @@ export default function Experience() {
         className="mb-20 text-center space-y-4"
       >
         <GlintText>
-          <StaggeredText text="Archives Opérationnelles" className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center" />
+          <StaggeredText text="ARCHIVES OPÉRATIONNELLES" className="font-serif text-4xl md:text-5xl text-zinc-50 font-bold justify-center" />
         </GlintText>
         <EmergingText 
           text="Chronologie des déploiements et ingénierie de pointe. Chaque projet est un jalon de résilience." 
-          className="font-sans text-zinc-400" 
+          className="font-sans text-zinc-100" 
         />
       </motion.div>
 
