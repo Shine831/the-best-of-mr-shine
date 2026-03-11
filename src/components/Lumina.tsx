@@ -58,6 +58,7 @@ export default function Lumina() {
   
   // Create motion values once
   const motionValues = useRef(solutions.map(() => ({ x: useMotionValue(0), y: useMotionValue(0) })));
+  const [dimensions, setDimensions] = useState({ width: 0, height: 700, orbitRadius: 350 });
   
   // Physics State (Mutable refs for performance)
   const physics = useRef(solutions.map(() => ({
@@ -71,6 +72,23 @@ export default function Lumina() {
   const mouseRef = useRef({ x: 10000, y: 10000 });
 
   useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const w = window.innerWidth;
+      let orbit = 350;
+      let h = 700;
+      
+      if (w < 640) { // Mobile
+        orbit = 160;
+        h = 450;
+      } else if (w < 1024) { // Tablet
+        orbit = 250;
+        h = 600;
+      }
+      
+      setDimensions({ width: w, height: h, orbitRadius: orbit });
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
@@ -79,19 +97,25 @@ export default function Lumina() {
         y: e.clientY - (rect.top + rect.height / 2),
       };
     };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   useAnimationFrame(() => {
     if (typeof window === "undefined") return;
 
-    const FRICTION = 0.92; // Slightly more fluid
+    const FRICTION = 0.92;
     const MOUSE_REPULSION = 500;
-    const MOUSE_RADIUS = 300;
-    const COLLISION_REPULSION = 1.4; // Stronger repulsion
-    const MIN_GAP = 30; 
-    const ORBIT_RADIUS = 350; // Circular boundary
+    const MOUSE_RADIUS = dimensions.orbitRadius * 0.8;
+    const COLLISION_REPULSION = 1.4;
+    const MIN_GAP = dimensions.width < 640 ? 15 : 30; 
+    const ORBIT_RADIUS = dimensions.orbitRadius; 
 
     for (let i = 0; i < physics.current.length; i++) {
       const b = physics.current[i];
@@ -170,12 +194,19 @@ export default function Lumina() {
 
       <div
         ref={containerRef}
-        className="relative flex w-full max-w-6xl h-[700px] items-center justify-center overflow-hidden mx-auto"
+        className="relative flex w-full max-w-6xl items-center justify-center overflow-hidden mx-auto"
+        style={{ height: dimensions.height }}
       >
         {/* Orbital visualization */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[600px] h-[600px] border border-zinc-900/30 rounded-full" />
-          <div className="absolute w-[400px] h-[400px] border border-zinc-900/10 rounded-full" />
+          <div 
+            className="border border-zinc-900/30 rounded-full transition-all duration-500" 
+            style={{ width: dimensions.orbitRadius * 1.7, height: dimensions.orbitRadius * 1.7 }}
+          />
+          <div 
+            className="absolute border border-zinc-900/10 rounded-full transition-all duration-500" 
+            style={{ width: dimensions.orbitRadius * 1.1, height: dimensions.orbitRadius * 1.1 }}
+          />
         </div>
         
         {solutions.map((s, i) => (

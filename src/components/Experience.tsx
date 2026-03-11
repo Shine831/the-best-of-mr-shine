@@ -113,12 +113,12 @@ function ExperienceItem({ exp, index }: { exp: any, index: number }) {
       ref={ref}
       variants={itemVariants}
       style={{ scale, opacity, filter: blur }}
-      className={`w-full flex ${index % 2 === 0 ? "md:justify-start" : "md:justify-end"} relative z-10 md:w-[800px]`}
+      className={`w-full flex ${index % 2 === 0 ? "md:justify-start" : "md:justify-end"} relative z-10 max-w-[800px]`}
     >
       {/* Timeline dot */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-zinc-800 border-2 border-zinc-950 hidden md:block z-20" />
       
-      <div className="w-full md:w-[calc(50%-2rem)]">
+      <div className="w-full md:w-[calc(50%-1.5rem)]">
         <ReflectionCard>
           <div className="space-y-4">
             <div className="space-y-1">
