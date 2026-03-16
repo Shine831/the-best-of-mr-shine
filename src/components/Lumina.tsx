@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useAnimationFrame } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion, useMotionValue, useAnimationFrame, useInView, MotionValue } from "framer-motion";
+import { useRef, useState, useEffect, memo, useMemo } from "react";
 import GlintText from "./GlintText";
 import StaggeredText from "./StaggeredText";
 
@@ -24,17 +24,19 @@ const solutions = [
  * Visual-only component for the badges.
  * Receives position from the central physics coordinator.
  */
-function SolutionBadge({
+interface SolutionBadgeProps {
+  label: string;
+  color: string;
+  x: MotionValue<number>;
+  y: MotionValue<number>;
+}
+
+const SolutionBadge = memo(({
   label,
   color,
   x,
   y,
-}: {
-  label: string;
-  color: string;
-  x: any;
-  y: any;
-}) {
+}: SolutionBadgeProps) => {
   return (
     <motion.div
       style={{
@@ -51,47 +53,65 @@ function SolutionBadge({
       {label}
     </motion.div>
   );
-}
+});
+
+SolutionBadge.displayName = "SolutionBadge";
 
 export default function Lumina() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.1 });
   
   // Create motion values
-  const m0 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m1 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m2 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m3 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m4 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m5 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m6 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m7 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m8 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m9 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m10 = { x: useMotionValue(0), y: useMotionValue(0) };
-  const m11 = { x: useMotionValue(0), y: useMotionValue(0) };
+  const m0_x = useMotionValue(0); const m0_y = useMotionValue(0);
+  const m1_x = useMotionValue(0); const m1_y = useMotionValue(0);
+  const m2_x = useMotionValue(0); const m2_y = useMotionValue(0);
+  const m3_x = useMotionValue(0); const m3_y = useMotionValue(0);
+  const m4_x = useMotionValue(0); const m4_y = useMotionValue(0);
+  const m5_x = useMotionValue(0); const m5_y = useMotionValue(0);
+  const m6_x = useMotionValue(0); const m6_y = useMotionValue(0);
+  const m7_x = useMotionValue(0); const m7_y = useMotionValue(0);
+  const m8_x = useMotionValue(0); const m8_y = useMotionValue(0);
+  const m9_x = useMotionValue(0); const m9_y = useMotionValue(0);
+  const m10_x = useMotionValue(0); const m10_y = useMotionValue(0);
+  const m11_x = useMotionValue(0); const m11_y = useMotionValue(0);
   
-  const mValues = [m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11];
-  const motionValues = useRef(mValues);
+  const motionValues = useMemo(() => [
+    { x: m0_x, y: m0_y }, { x: m1_x, y: m1_y }, { x: m2_x, y: m2_y },
+    { x: m3_x, y: m3_y }, { x: m4_x, y: m4_y }, { x: m5_x, y: m5_y },
+    { x: m6_x, y: m6_y }, { x: m7_x, y: m7_y }, { x: m8_x, y: m8_y },
+    { x: m9_x, y: m9_y }, { x: m10_x, y: m10_y }, { x: m11_x, y: m11_y },
+  ], [
+    m0_x, m0_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y, m4_x, m4_y, m5_x, m5_y,
+    m6_x, m6_y, m7_x, m7_y, m8_x, m8_y, m9_x, m9_y, m10_x, m10_y, m11_x, m11_y
+  ]);
   const [dimensions, setDimensions] = useState({ width: 0, height: 700, orbitRadius: 350 });
   
   // Physics State (Mutable refs for performance)
-  const physics = useRef<any[]>([]);
+  const physics = useRef<{
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    radius: number;
+  }[]>([]);
   const mouseRef = useRef({ x: 10000, y: 10000 });
-
-  // Lazy initializer to avoid impurity during render
-  if (physics.current.length === 0) {
-    physics.current = solutions.map(() => ({
-      x: (Math.random() - 0.5) * 600,
-      y: (Math.random() - 0.5) * 400,
-      vx: 0,
-      vy: 0,
-      radius: 70 // Approximate radius for collision
-    }));
-  }
+  const containerRect = useRef<DOMRect | null>(null);
 
   useEffect(() => {
+    // Initialize physics once on mount to maintain purity during render
+    if (physics.current.length === 0) {
+      physics.current = solutions.map(() => ({
+        x: (Math.random() - 0.5) * 600,
+        y: (Math.random() - 0.5) * 400,
+        vx: 0,
+        vy: 0,
+        radius: 70 // Approximate radius for collision
+      }));
+    }
+
     const handleResize = () => {
       if (!containerRef.current) return;
+      containerRect.current = containerRef.current.getBoundingClientRect();
       const w = window.innerWidth;
       let orbit = 350;
       let h = 700;
@@ -104,12 +124,21 @@ export default function Lumina() {
         h = 600;
       }
       
-      setDimensions({ width: w, height: h, orbitRadius: orbit });
+      setDimensions(prev => {
+        if (prev.width === w && prev.height === h && prev.orbitRadius === orbit) return prev;
+        return { width: w, height: h, orbitRadius: orbit };
+      });
+    };
+
+    const handleScroll = () => {
+      if (containerRef.current) {
+        containerRect.current = containerRef.current.getBoundingClientRect();
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      if (!containerRect.current) return;
+      const rect = containerRect.current;
       mouseRef.current = {
         x: e.clientX - (rect.left + rect.width / 2),
         y: e.clientY - (rect.top + rect.height / 2),
@@ -118,15 +147,17 @@ export default function Lumina() {
 
     handleResize();
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
   useAnimationFrame(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !isInView) return;
 
     const FRICTION = 0.92;
     const MOUSE_REPULSION = 500;
@@ -190,8 +221,8 @@ export default function Lumina() {
       b.y += b.vy;
 
       // 5. Update Motion Values for Render
-      motionValues.current[i].x.set(b.x);
-      motionValues.current[i].y.set(b.y);
+      motionValues[i].x.set(b.x);
+      motionValues[i].y.set(b.y);
     }
   });
 
@@ -232,8 +263,8 @@ export default function Lumina() {
             key={i} 
             label={s.label} 
             color={s.color} 
-            x={motionValues.current[i].x} 
-            y={motionValues.current[i].y} 
+            x={motionValues[i].x}
+            y={motionValues[i].y}
           />
         ))}
       </div>
