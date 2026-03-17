@@ -56,8 +56,11 @@ export const Header = () => {
 
       {/* Mobile Burger Toggle */}
       <button 
-        className="md:hidden text-zinc-100 p-2"
+        className="md:hidden text-zinc-100 p-2 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:outline-none rounded-sm"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        aria-expanded={isOpen}
+        aria-controls="mobile-menu"
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
@@ -68,6 +71,10 @@ export const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navigation"
             initial={{ opacity: 0, y: "-100%" }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: "-100%" }}
@@ -82,8 +89,9 @@ export const Header = () => {
             <div className="absolute top-0 left-0 right-0 p-8 flex justify-between items-center bg-black/80 backdrop-blur-xl border-b border-white/5">
               <span className="font-serif text-lg tracking-[0.2em] font-light text-zinc-100 uppercase">MENU</span>
               <button 
-                className="text-zinc-100 p-3 border border-zinc-800 rounded-full hover:bg-zinc-900 transition-colors"
+                className="text-zinc-100 p-3 border border-zinc-800 rounded-full hover:bg-zinc-900 transition-colors focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:outline-none"
                 onClick={() => setIsOpen(false)}
+                aria-label="Fermer le menu"
               >
                 <X size={24} />
               </button>
