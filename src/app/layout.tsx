@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, JetBrains_Mono } from "next/font/google";
-import AmbientLight from "@/components/AmbientLight";
-import GrainOverlay from "@/components/GrainOverlay";
+import { Playfair_Display, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
-import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -16,10 +13,15 @@ const mono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const grotesk = Space_Grotesk({
+  variable: "--font-grotesk",
+  subsets: ["latin"],
+});
+
 const siteConfig = {
   name: "THE BEST OF MR SHINE",
-  description: "Portfolio de Jean Claude Schimit Baha - Architecte de Solutions Digitales & Développeur Web Full Stack. Expertise en React, Nest.js, Angular et Java.",
-  url: "https://the-best-of-mr-shine.vercel.app", // À mettre à jour après déploiement
+  description: "Ultra-Premium Architectural Web Design & Development",
+  url: "https://the-best-of-mr-shine.vercel.app", 
   ogImage: "https://the-best-of-mr-shine.vercel.app/og.png",
   links: {
     github: "https://github.com/Shine831",
@@ -117,13 +119,13 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="fr" className={`${playfair.variable} ${mono.className} ${mono.variable}`}>
+    <html lang="fr" className={`${playfair.variable} ${mono.variable} ${grotesk.variable} ${grotesk.className}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Google Tag Manager */}
+        {/* eslint-disable-next-line @next/next/next-script-for-ga */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s), dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id=GTM-5FVZRSKR'+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5FVZRSKR');`,
@@ -131,7 +133,7 @@ export default function RootLayout({
         />
         {/* End Google Tag Manager */}
       </head>
-      <body className="bg-black text-zinc-100 antialiased font-sans overflow-x-hidden relative">
+      <body className="bg-black text-zinc-100 antialiased overflow-x-hidden relative selection:bg-zinc-800 selection:text-white">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -142,11 +144,9 @@ export default function RootLayout({
           ></iframe>
         </noscript>
         {/* End GTM (noscript) */}
+        <div className="noise-bg pointer-events-none"></div>
         <SmoothScroll>
-          <GrainOverlay />
-          <AmbientLight />
-          <FloatingWhatsApp />
-          <div className="relative z-10">
+          <div className="relative z-10 w-full flex flex-col min-h-screen">
             {children}
           </div>
         </SmoothScroll>

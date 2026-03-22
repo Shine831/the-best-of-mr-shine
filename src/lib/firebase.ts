@@ -16,7 +16,7 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Placeholder for Stitch integration or serverless functions wrapper
 // "Intègre les fonctions Firebase via Stitch pour une architecture serverless."
-export const invokeServerlessFunction = async (functionName: string, payload: any) => {
+export const invokeServerlessFunction = async (functionName: string, payload: unknown) => {
   console.log(`[Stitch/Firebase] Invoking serverless function: ${functionName} with payload`, payload);
   // Implementation would go here
   return { success: true, timestamp: new Date().toISOString() };
