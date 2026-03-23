@@ -24,7 +24,7 @@ export const Header = () => {
         isScrolled ? "bg-black/60 backdrop-blur-xl border-b border-white/5" : "bg-transparent border-transparent"
       }`}
     >
-      <Link href="/" className="font-serif tracking-[0.2em] text-sm md:text-lg text-zinc-100 hover:text-white transition-colors uppercase z-10">
+      <Link href="/" className="font-serif tracking-[0.2em] text-sm md:text-lg text-zinc-100 hover:text-white transition-colors uppercase z-10" aria-label="Retour à l'accueil du portfolio The Best Of Mr Shine">
         THE BEST OF MR SHINE
       </Link>
 
@@ -33,12 +33,13 @@ export const Header = () => {
           href="https://wa.me/237699477055?text=Protocole%20Shine%20activé.%20Je%20souhaite%20discuter%20d'un%20projet%20critique."
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Contacter Jean Claude Schimit Baha sur WhatsApp pour un projet"
           className="relative px-6 py-2 overflow-hidden rounded-full group glass-panel flex items-center gap-3 transition-colors hover:border-emerald-500/30"
         >
           <span className="absolute inset-0 w-full h-full bg-emerald-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-          <span className="relative font-mono text-[10px] tracking-[0.3em] font-medium text-zinc-100 uppercase mt-px">
-            Liaison
+          <span className="relative font-mono text-[10px] tracking-[0.2em] font-bold text-zinc-100 uppercase mt-px">
+            Engager l&apos;Architecte
           </span>
         </a>
       </MagneticButton>

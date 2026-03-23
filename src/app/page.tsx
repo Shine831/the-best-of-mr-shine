@@ -1,6 +1,7 @@
 import Preloader from "@/components/Preloader";
 import { Header } from "@/components/Header";
 import Hero from "@/components/Hero";
+import TechStack from "@/components/TechStack";
 import Showcase from "@/components/Showcase";
 import Philosophy from "@/components/Philosophy";
 import ContactCTA from "@/components/ContactCTA";
@@ -11,6 +12,7 @@ export default function Home() {
       <Preloader />
       <Header />
       <Hero />
+      <TechStack />
       <Showcase />
       <Philosophy />
       <ContactCTA />

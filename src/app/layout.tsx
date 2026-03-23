@@ -34,20 +34,21 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
+    default: "THE BEST OF MR SHINE | Architecte Solutions Critiques",
     template: `%s | ${siteConfig.name}`,
   },
-  description: siteConfig.description,
+  description: "Architecte de Solutions Digitales & Développeur Web Full Stack. Conception d'écosystèmes asymétriques et microservices de très haute fréquence.",
   keywords: [
     "Jean Claude Schimit Baha",
     "THE BEST OF MR SHINE",
-    "Développeur Web Cameroun",
+    "Développeur Web Freelance",
+    "Architecte Web B2B",
     "Full Stack Developer",
-    "React Developer",
-    "NestJS",
-    "Next.js Portfolio",
-    "Architecte Digital",
-    "Solutions Web Haut de Gamme"
+    "Next.js Developer",
+    "React Expert",
+    "Ingénierie Logicielle",
+    "Solutions Web Haut de Gamme",
+    "Création site web premium"
   ],
   authors: [
     {
@@ -77,7 +78,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@Shine831", // Optionnel
+    creator: "@Shine831",
   },
   icons: {
     icon: "/favicon.ico",
@@ -103,19 +104,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Structured Data (JSON-LD) for Person/Portfolio
+  // Structured Data (JSON-LD) for Person/Portfolio & Professional Service
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Jean Claude Schimit Baha",
-    "jobTitle": "Architecte de Solutions Digitales & Développeur Web",
-    "url": siteConfig.url,
-    "sameAs": [
-      siteConfig.links.github,
-      "https://www.linkedin.com/in/jean-claude-schimit-baha"
-    ],
-    "description": siteConfig.description,
-    "knowsAbout": ["React", "Nest.js", "Angular", "Java", "Next.js", "Full Stack Development"]
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        "url": siteConfig.url,
+        "name": siteConfig.name,
+        "description": siteConfig.description,
+        "publisher": {
+          "@id": `${siteConfig.url}/#person`
+        },
+        "inLanguage": "fr-FR"
+      },
+      {
+        "@type": ["Person", "ProfessionalService"],
+        "@id": `${siteConfig.url}/#person`,
+        "name": "Jean Claude Schimit Baha",
+        "jobTitle": "Architecte de Solutions Digitales & Développeur Web",
+        "url": siteConfig.url,
+        "image": siteConfig.ogImage,
+        "sameAs": [
+          siteConfig.links.github,
+          "https://www.linkedin.com/in/jean-claude-schimit-baha"
+        ],
+        "description": siteConfig.description,
+        "priceRange": "$$$",
+        "knowsAbout": ["React", "Nest.js", "Angular", "Java", "Next.js", "Full Stack Development", "Architecture Logicielle"]
+      }
+    ]
   };
 
   return (
@@ -133,7 +152,7 @@ export default function RootLayout({
         />
         {/* End Google Tag Manager */}
       </head>
-      <body className="bg-black text-zinc-100 antialiased overflow-x-hidden relative selection:bg-zinc-800 selection:text-white">
+      <body className="bg-black text-zinc-100 antialiased overflow-x-hidden relative selection:bg-emerald-900/50 selection:text-emerald-200">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

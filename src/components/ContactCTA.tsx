@@ -30,14 +30,15 @@ export default function ContactCTA() {
               href="https://wa.me/237699477055?text=Protocole%20Shine%20activé.%20Je%20souhaite%20discuter%20d'un%20projet%20critique."
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Initier une mission stratégique en contactant Jean Claude Schimit Baha via WhatsApp"
               className="group relative flex items-center justify-center w-[280px] h-[280px] md:w-[400px] md:h-[400px] rounded-full bg-zinc-950/50 backdrop-blur-md hover:bg-zinc-900 transition-colors duration-700 border border-white/5 shadow-2xl"
             >
               <div className="absolute inset-0 rounded-full border border-white/10 scale-105 group-hover:scale-100 transition-transform duration-700 ease-[0.16,1,0.3,1] opacity-50 group-hover:opacity-100" />
               <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-colors duration-700 blur-3xl" />
               
               <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-500 px-4">
-                <span className="font-serif text-4xl md:text-6xl uppercase tracking-widest mb-6 block text-center">
-                  Liaison<br/>Prioritaire
+                <span className="font-serif text-3xl md:text-5xl uppercase tracking-widest mb-6 block text-center">
+                  Déployer<br/>L&apos;Architecture
                 </span>
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/40 transition-colors duration-500">
                   <ArrowUpRight strokeWidth={1} className="w-8 h-8 md:w-10 md:h-10 text-emerald-400 group-hover:text-emerald-300 transition-colors duration-500" />
