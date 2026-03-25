@@ -10,38 +10,82 @@ export default function Philosophy() {
     offset: ["start end", "end start"],
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [150, -250]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [-50, 250]);
-  const opacity = useTransform(scrollYProgress, [0.3, 0.45, 0.6], [0, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.95, 1, 1.05]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [200, -300]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-100, 300]);
+
+  const quote = "La perfection est atteinte, non pas lorsqu'il n'y a plus rien à ajouter, mais lorsqu'il n'y a plus rien à retirer.";
 
   return (
-    <section ref={container} className="relative h-screen flex items-center justify-center bg-black overflow-hidden py-32">
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(24,24,27,0.4)_0%,transparent_70%)] pointer-events-none" />
+    <section ref={container} className="relative min-h-screen flex items-center justify-center bg-obsidian-950 overflow-hidden py-40">
+      {/* Background Ambience */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.03)_0%,transparent_70%)] pointer-events-none" />
       
-      <div className="relative z-10 text-center flex flex-col items-center max-w-5xl mx-auto px-6">
-        <motion.div style={{ y: y1 }} className="absolute text-[12vw] md:text-[8vw] font-serif font-bold text-white/[0.03] uppercase tracking-tighter whitespace-nowrap pointer-events-none select-none">
-          L&apos;ingénierie de l&apos;éclat
+      {/* Animated Scanning Beam */}
+      <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-emerald-500/5 to-transparent animate-beam opacity-20 pointer-events-none" />
+
+      <div className="relative z-10 text-center flex flex-col items-center max-w-7xl mx-auto px-6">
+        {/* Kinetic Background Text */}
+        <motion.div style={{ y: y1 }} className="absolute -top-20 left-0 text-[15vw] font-serif font-black text-white/[0.015] uppercase tracking-[1em] whitespace-nowrap pointer-events-none select-none mask-radial">
+          ESSENCE
         </motion.div>
         
-        <motion.div style={{ y: y2 }} className="absolute mt-[20vh] text-[12vw] md:text-[8vw] font-serif font-bold text-white/[0.02] uppercase tracking-tighter whitespace-nowrap pointer-events-none select-none">
-          Minimalisme Absolu
+        <motion.div style={{ y: y2 }} className="absolute -bottom-20 right-0 text-[15vw] font-serif font-black text-white/[0.01] uppercase tracking-[1em] whitespace-nowrap pointer-events-none select-none mask-radial">
+          RIGUEUR
         </motion.div>
 
-        <motion.div style={{ opacity, scale }} className="relative z-20 flex flex-col items-center gap-10">
-          <div className="w-px h-16 md:h-24 bg-gradient-to-b from-transparent via-emerald-500/50 to-transparent" />
+        <div className="relative z-20 flex flex-col items-center gap-16">
+          <motion.div
+            initial={{ height: 0 }}
+            whileInView={{ height: "100px" }}
+            transition={{ duration: 1.5, ease: "circOut" }}
+            className="w-px bg-gradient-to-b from-transparent via-emerald-500 to-transparent"
+          />
           
-          <h3 className="font-serif text-3xl md:text-5xl lg:text-6xl text-zinc-100/90 font-light tracking-wide leading-[1.3] text-center max-w-4xl">
-            &quot;La perfection est atteinte, non pas lorsqu&apos;il n&apos;y a plus rien à ajouter, mais lorsqu&apos;il n&apos;y a plus rien à retirer.&quot;
-          </h3>
-          
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-8 h-[1px] bg-zinc-700" />
-            <p className="font-mono text-[10px] tracking-[0.5em] text-zinc-500 uppercase">
-              Antoine de Saint-Exupéry
-            </p>
+          <div className="max-w-4xl space-y-12">
+            <h3 className="font-serif text-4xl md:text-6xl lg:text-7xl text-zinc-100 font-extralight tracking-tight leading-[1.1] text-center">
+              {quote.split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, filter: "blur(10px)", y: 20 }}
+                  whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: i * 0.05,
+                    ease: [0.215, 0.61, 0.355, 1]
+                  }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  className="inline-block mr-[0.2em]"
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </h3>
+
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              whileInView={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+              className="flex flex-col items-center gap-6"
+            >
+              <div className="w-12 h-px bg-emerald-500/50" />
+              <div className="space-y-1">
+                <p className="font-mono text-[10px] md:text-xs tracking-[0.6em] text-emerald-400 uppercase">
+                  Antoine de Saint-Exupéry
+                </p>
+                <p className="font-mono text-[8px] tracking-[0.3em] text-zinc-600 uppercase">
+                  Philosophie du Design Minimaliste
+                </p>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+
+          <motion.div
+            initial={{ height: 0 }}
+            whileInView={{ height: "100px" }}
+            transition={{ duration: 1.5, ease: "circOut", delay: 0.5 }}
+            className="w-px bg-gradient-to-b from-transparent via-emerald-500/30 to-transparent"
+          />
+        </div>
       </div>
     </section>
   );
