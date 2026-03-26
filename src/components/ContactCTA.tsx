@@ -2,13 +2,11 @@
 
 import { motion } from "framer-motion";
 import MagneticButton from "./MagneticButton";
-import { Github, Linkedin, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
 export default function ContactCTA() {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden pt-40 pb-20">
+    <section id="contact" className="relative min-h-screen flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden py-40">
       
       {/* Ambient bottom glow with refined intensity */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120vw] h-[60vh] bg-[radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.08)_0%,transparent_70%)] pointer-events-none mix-blend-screen" />
@@ -54,7 +52,7 @@ export default function ContactCTA() {
               <div className="absolute inset-0 rounded-full border border-white/5 group-hover:border-emerald-500/50 transition-all duration-1000 group-hover:scale-110" />
               <div className="absolute inset-4 rounded-full border border-white/10 group-hover:border-emerald-400/30 transition-all duration-700" />
               
-              {/* Liquid distortion background (conceptual via CSS & Framer) */}
+              {/* Liquid distortion background */}
               <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/5 transition-colors duration-1000 blur-3xl" />
 
               <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-500 px-8 text-center relative z-10">
@@ -78,43 +76,6 @@ export default function ContactCTA() {
           </MagneticButton>
         </motion.div>
       </div>
-
-      <footer className="w-full max-w-[90rem] flex flex-col md:flex-row items-end justify-between py-12 border-t border-white/5 z-10 gap-12 mt-40">
-        <div className="flex flex-col gap-8 w-full md:w-auto">
-          <div className="space-y-2">
-            <span className="font-serif tracking-[0.3em] text-2xl text-zinc-100 uppercase block">THE BEST OF MR SHINE</span>
-            <span className="font-mono text-[9px] tracking-[0.5em] text-zinc-600 uppercase">Architecture de Solutions Critiques</span>
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Localisation</span>
-            <span className="font-sans text-sm text-zinc-300">Douala, Cameroun & Remote</span>
-          </div>
-        </div>
-        
-        <div className="flex flex-col items-end gap-12 w-full md:w-auto">
-          <div className="flex items-center gap-4 md:gap-8">
-            <MagneticButton strength={15}>
-              <a href="https://github.com/Shine831" target="_blank" rel="noreferrer" className="group flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-zinc-500 hover:text-emerald-400 uppercase transition-colors px-4 py-2">
-                <Github className="w-4 h-4 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                <span className="hidden md:inline">GitHub Core</span>
-              </a>
-            </MagneticButton>
-            <MagneticButton strength={15}>
-              <a href="https://www.linkedin.com/in/jean-claude-schimit-baha" target="_blank" rel="noreferrer" className="group flex items-center gap-3 font-mono text-[10px] tracking-[0.4em] text-zinc-500 hover:text-emerald-400 uppercase transition-colors px-4 py-2">
-                <Linkedin className="w-4 h-4 group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                <span className="hidden md:inline">LinkedIn</span>
-              </a>
-            </MagneticButton>
-          </div>
-
-          <div className="text-right">
-            <span className="font-mono text-[9px] tracking-[0.4em] text-zinc-700 uppercase">
-              &copy; {currentYear} &mdash; TOUS DROITS RÉSERVÉS <br/>
-              DESIGNÉ & DÉVELOPPÉ PAR MR SHINE
-            </span>
-          </div>
-        </div>
-      </footer>
     </section>
   );
 }

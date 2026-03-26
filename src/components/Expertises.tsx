@@ -46,7 +46,7 @@ const expertises = [
   }
 ];
 
-export default function Showcase() {
+export default function Expertises() {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -56,7 +56,7 @@ export default function Showcase() {
   const backgroundX = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   return (
-    <section ref={targetRef} className="relative h-[300vh] bg-obsidian-950">
+    <section id="expertises" ref={targetRef} className="relative h-[300vh] bg-obsidian-950">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         
         {/* Depth Parallax background text */}
