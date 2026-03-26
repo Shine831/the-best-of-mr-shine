@@ -22,7 +22,7 @@ const grotesk = Space_Grotesk({
 const siteConfig = {
   name: "THE BEST OF MR SHINE",
   description: "Ultra-Premium Architectural Web Design & Development",
-  url: "https://the-best-of-mr-shine.vercel.app", 
+  url: "https://the-best-of-mr-shine.vercel.app",
   ogImage: "https://the-best-of-mr-shine.vercel.app/og.png",
   links: {
     github: "https://github.com/Shine831",
@@ -163,7 +163,7 @@ export default function RootLayout({
         />
         {/* End Google Tag Manager */}
       </head>
-      <body className="bg-obsidian-950 text-zinc-50 antialiased overflow-x-hidden relative selection:bg-emerald-500/30 selection:text-emerald-200">
+      <body className="bg-black text-zinc-100 antialiased overflow-x-hidden relative selection:bg-emerald-900/50 selection:text-emerald-200">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
@@ -174,7 +174,7 @@ export default function RootLayout({
           ></iframe>
         </noscript>
         {/* End GTM (noscript) */}
-        <div className="noise-bg-ultra"></div>
+        <div className="noise-bg pointer-events-none"></div>
         <Cursor />
         <SmoothScroll>
           <div className="relative z-10 w-full flex flex-col min-h-screen">
