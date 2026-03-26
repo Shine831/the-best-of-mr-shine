@@ -14,7 +14,7 @@ const projects = [
       "Portfolio premium pour un directeur artistique à Douala. Expérience immersive avec preloader cinématique, grille Bento 3D tilt, et animations scroll-triggered.",
     stack: ["Next.js 16", "Framer Motion", "Tailwind v4", "Vercel"],
     image: "/projects/chamix.png",
-    liveUrl: "https://chamix.vercel.app",
+    liveUrl: "https://chamix-graphic.vercel.app",
     githubUrl: null,
     accent: "from-red-600/30 to-red-950/50",
     accentColor: "#DC143C",
