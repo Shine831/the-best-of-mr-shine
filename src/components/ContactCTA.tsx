@@ -1,76 +1,132 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useEffect } from "react";
 import MagneticButton from "./MagneticButton";
 import { Send } from "lucide-react";
 
 export default function ContactCTA() {
-  return (
-    <section id="contact" className="relative min-h-screen flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden py-40">
-      
-      {/* Ambient bottom glow with refined intensity */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120vw] h-[60vh] bg-[radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.08)_0%,transparent_70%)] pointer-events-none mix-blend-screen" />
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-      {/* Background Kinetic Text */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.02] select-none">
-        <span className="font-serif text-[30vw] font-black uppercase tracking-tighter block leading-none">
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 20 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+
+  // Gravity well effect: pull elements toward mouse
+  const pullX = useTransform(springX, [-500, 500], [-30, 30]);
+  const pullY = useTransform(springY, [-500, 500], [-30, 30]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      mouseX.set(e.clientX - centerX);
+      mouseY.set(e.clientY - centerY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  return (
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="relative min-h-screen flex flex-col items-center justify-center bg-obsidian-pure px-6 overflow-hidden py-40"
+    >
+      
+      {/* Dynamic Gravity Glow */}
+      <motion.div
+        style={{ x: pullX, y: pullY }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140vw] h-[70vh] bg-[radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.1)_0%,transparent_70%)] pointer-events-none mix-blend-screen opacity-60"
+      />
+
+      {/* Background Kinetic Text with Gravity Pull */}
+      <motion.div
+        style={{ x: useTransform(pullX, (v) => v * -0.5), y: useTransform(pullY, (v) => v * -0.5) }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.025] select-none"
+      >
+        <span className="font-serif text-[35vw] font-black uppercase tracking-tighter block leading-none">
           SHINE
         </span>
-      </div>
+      </motion.div>
 
       <div className="flex-1 flex flex-col items-center justify-center w-full z-10 relative">
         <motion.div
-          initial={{ opacity: 0, y: 100 }}
+          style={{ x: pullX, y: pullY }}
+          initial={{ opacity: 0, y: 120 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="flex flex-col items-center space-y-20 w-full"
+          className="flex flex-col items-center space-y-24 w-full"
         >
-          <div className="space-y-6 text-center">
-            <motion.span
-              initial={{ opacity: 0, letterSpacing: "0em" }}
-              whileInView={{ opacity: 1, letterSpacing: "0.8em" }}
-              transition={{ duration: 2, delay: 0.5 }}
-              className="font-mono text-[10px] md:text-xs text-emerald-500 uppercase block"
+          <div className="space-y-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, letterSpacing: "0.2em" }}
+              whileInView={{ opacity: 1, letterSpacing: "1.2em" }}
+              transition={{ duration: 2.5, delay: 0.5, ease: "easeOut" }}
+              className="flex items-center justify-center gap-4 mb-4"
             >
-              INITIALISER LA CONNEXION
-            </motion.span>
-            <h2 className="font-serif text-5xl md:text-8xl lg:text-9xl text-white tracking-tighter uppercase leading-none">
+               <div className="w-12 h-px bg-emerald-500/40 hidden md:block" />
+               <span className="font-mono text-[11px] md:text-sm text-emerald-400 uppercase">
+                  INITIALISER LA CONNEXION
+               </span>
+               <div className="w-12 h-px bg-emerald-500/40 hidden md:block" />
+            </motion.div>
+
+            <h2 className="font-serif text-6xl md:text-9xl lg:text-[11rem] text-white tracking-tighter uppercase leading-[0.85]">
               Prêt pour le <br/> <span className="italic text-zinc-500">Prochain Niveau ?</span>
             </h2>
           </div>
 
-          <MagneticButton strength={30}>
+          <MagneticButton strength={40}>
             <a
               href="https://wa.me/237699477055?text=Protocole%20Shine%20activé.%20Je%20souhaite%20discuter%20d'un%20projet%20critique."
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Contacter Jean Claude Schimit Baha via WhatsApp"
-              className="group relative flex items-center justify-center w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full"
+              className="group relative flex items-center justify-center w-[320px] h-[320px] md:w-[500px] md:h-[500px] rounded-full"
             >
-              {/* Animated outer ring */}
-              <div className="absolute inset-0 rounded-full border border-white/5 group-hover:border-emerald-500/50 transition-all duration-1000 group-hover:scale-110" />
-              <div className="absolute inset-4 rounded-full border border-white/10 group-hover:border-emerald-400/30 transition-all duration-700" />
+              {/* Dynamic gravitational rings */}
+              <div className="absolute inset-0 rounded-full border border-white/[0.03] group-hover:border-emerald-500/60 transition-all duration-1000 group-hover:scale-110" />
+              <div className="absolute inset-6 rounded-full border border-white/[0.06] group-hover:border-emerald-400/40 transition-all duration-700" />
+              <div className="absolute inset-12 rounded-full border border-white/[0.09] group-hover:border-emerald-300/20 transition-all duration-500" />
               
-              {/* Liquid distortion background */}
-              <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/5 transition-colors duration-1000 blur-3xl" />
+              {/* Core Liquid Glow */}
+              <div className="absolute inset-20 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-all duration-1000 blur-[80px]" />
 
-              <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-500 px-8 text-center relative z-10">
-                <span className="font-serif text-4xl md:text-6xl uppercase tracking-widest mb-8 leading-tight">
-                  Déployer<br/><span className="text-emerald-400 group-hover:text-emerald-300">L&apos;Éclat</span>
+              <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-700 px-12 text-center relative z-10">
+                <span className="font-serif text-5xl md:text-7xl uppercase tracking-widest mb-10 leading-tight">
+                  Déployer<br/><span className="text-emerald-400 group-hover:text-emerald-300 transition-colors duration-500">L&apos;Éclat</span>
                 </span>
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700">
-                  <Send strokeWidth={1} className="w-8 h-8 md:w-10 md:h-10 text-emerald-400 group-hover:text-white transition-colors duration-500" />
+                <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:border-emerald-400 group-hover:shadow-[0_0_70px_rgba(16,185,129,0.6)] transition-all duration-700">
+                  <Send strokeWidth={0.75} className="w-10 h-10 md:w-14 md:h-14 text-emerald-400 group-hover:text-white transition-all duration-500 group-hover:scale-110" />
+
+                  {/* Internal scanning line */}
+                  <div className="absolute inset-0 w-full h-full animate-beam bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
 
-              {/* Orbiting element */}
+              {/* Gravitational Orbits */}
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 pointer-events-none"
               >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-500/50 blur-[2px]" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
+              </motion.div>
+
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-10 pointer-events-none"
+              >
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400/40" />
               </motion.div>
             </a>
           </MagneticButton>
