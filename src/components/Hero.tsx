@@ -63,7 +63,7 @@ export default function Hero() {
           <div className="relative px-6 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden">
             <div className="absolute inset-0 w-full h-full animate-beam bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
             <span className="font-mono text-[10px] tracking-[0.4em] text-emerald-400 uppercase">
-              Spécification Core v.2026
+              Architecte IA & Automatisations
             </span>
           </div>
         </motion.div>
@@ -104,7 +104,7 @@ export default function Hero() {
           className="max-w-3xl mx-auto space-y-6"
         >
           <p className="font-sans text-lg md:text-2xl text-zinc-400 font-light tracking-wide leading-relaxed">
-            Ingénierie de systèmes <span className="text-white font-medium italic">ultra-critiques</span> et design d&apos;interfaces cinématiques à haute fréquence.
+            Ingénierie de systèmes <span className="text-white font-medium italic">ultra-critiques</span>, Création d&apos;Agents IA Autonomes (Manus, Anthropic) & Workflows Zapier/N8N.
           </p>
           <div className="w-24 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent mx-auto" />
         </motion.div>

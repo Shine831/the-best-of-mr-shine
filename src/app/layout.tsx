@@ -47,6 +47,11 @@ export const metadata: Metadata = {
     "Full Stack Developer",
     "Next.js Developer",
     "React Expert",
+    "Automatisation IA",
+    "Zapier & n8n Expert",
+    "Anthropic AI",
+    "Manus AI Autonomous Agents",
+    "Grok & Google AI",
     "Ingénierie Logicielle",
     "Solutions Web Haut de Gamme",
     "Création site web premium"
@@ -133,7 +138,12 @@ export default function RootLayout({
         ],
         "description": siteConfig.description,
         "priceRange": "$$$",
-        "knowsAbout": ["React", "Nest.js", "Angular", "Java", "Next.js", "Full Stack Development", "Architecture Logicielle"]
+        "knowsAbout": [
+          "React", "Nest.js", "Angular", "Java", "Next.js", 
+          "Full Stack Development", "Architecture Logicielle", 
+          "Automatisation IA", "Zapier Workflow", "n8n Local Configurations",
+          "Anthropic Tools", "Manus AI", "Grok Integration", "Google AI Environment"
+        ]
       }
     ]
   };

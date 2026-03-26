@@ -118,8 +118,11 @@ function ProjectCard({ project }: { project: Project }) {
       {/* Dynamic Background Gradient */}
       <div className={`absolute inset-0 bg-gradient-to-tr ${project.color} opacity-20 mix-blend-overlay transition-all duration-1000 group-hover:opacity-40 scale-110 group-hover:scale-100`} />
 
+      {/* Dark Scrim for solid text contrast on desktop */}
+      <div className="absolute inset-x-0 bottom-0 h-[80%] bg-gradient-to-t from-black/95 via-black/60 to-transparent z-10 pointer-events-none" />
+
       {/* Dynamic Animated Beam */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 origin-left" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 origin-left z-20" />
 
       {/* Year & Icon Badge */}
       <div className="absolute top-0 right-0 p-8 md:p-12 flex flex-col items-end gap-4">
