@@ -144,9 +144,9 @@ function ProjectCard({ expertise }: { expertise: Expertise }) {
             <span className="w-6 md:w-8 h-px bg-emerald-500/30" />
             {expertise.type}
           </motion.span>
-          <h2 className="font-serif text-3xl md:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-[1.1] md:leading-[0.9]">
+          <h2 className="font-serif text-3xl md:text-5xl lg:text-5xl xl:text-6xl text-white tracking-tight uppercase leading-[1.1] md:leading-[0.9] break-words w-full">
             {expertise.title.split(" ").map((w, i) => (
-              <span key={i} className="block">{w}</span>
+              <span key={i} className="block w-full">{w}</span>
             ))}
           </h2>
         </div>
