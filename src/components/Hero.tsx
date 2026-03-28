@@ -35,19 +35,31 @@ export default function Hero() {
   
   return (
     <section ref={container} className="relative h-[120vh] flex flex-col items-center justify-center overflow-hidden bg-obsidian-950">
-      {/* 3D Video Background */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-        >
-          <source src="/videos/hero-bg.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/60 via-obsidian-950/40 to-obsidian-950/90" />
-      </div>
+      {/* 2026 Premium Video Orb (Cinematic Portal) */}
+      <motion.div 
+        style={{ scale }}
+        className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
+      >
+        <div className="relative w-[150vw] h-[150vw] md:w-[100vw] md:h-[100vw] max-w-[1400px] max-h-[1400px]">
+          <div 
+            className="absolute inset-0 rounded-full" 
+            style={{ 
+              maskImage: "radial-gradient(circle at center, black 0%, transparent 60%)", 
+              WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 60%)" 
+            }}
+          >
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-screen"
+            >
+              <source src="/videos/hero-bg.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Cinematic Grid Reveal */}
       <div className="absolute inset-0 z-[1] opacity-20 pointer-events-none">

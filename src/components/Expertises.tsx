@@ -59,20 +59,6 @@ export default function Expertises() {
     <section id="expertises" ref={targetRef} className="relative h-[300vh] bg-obsidian-950">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         
-        {/* 3D Video Background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-15"
-          >
-            <source src="/videos/expertises-bg.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950/80 via-obsidian-950/40 to-obsidian-950/80" />
-        </div>
-
         {/* Depth Parallax background text */}
         <motion.div 
           style={{ x: backgroundX }}
@@ -121,6 +107,25 @@ function ProjectCard({ expertise }: { expertise: Expertise }) {
       onMouseMove={handleMouseMove}
       className="w-[85vw] md:w-[70vw] lg:w-[60vw] h-[75vh] shrink-0 flex flex-col justify-end p-6 md:p-10 lg:p-12 glass-panel relative overflow-hidden group cursor-none"
     >
+      {/* 2026 Micro-Interaction: Video Texture Reveal on Hover */}
+      <div 
+        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-40 transition-all duration-1000 mix-blend-screen pointer-events-none" 
+        style={{ 
+          maskImage: "radial-gradient(circle at center, black 0%, transparent 80%)", 
+          WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 80%)" 
+        }}
+      >
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover scale-125 group-hover:scale-100 transition-transform duration-[2s] ease-out"
+        >
+          <source src="/videos/expertises-bg.mp4" type="video/mp4" />
+        </video>
+      </div>
+
       {/* Light-tracking border (Glassmorphism v3) */}
       <div
         className="absolute inset-0 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"

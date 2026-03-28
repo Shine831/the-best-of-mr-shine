@@ -61,19 +61,6 @@ export default function About() {
       ref={ref}
       className="relative py-32 md:py-40 bg-obsidian-950 overflow-hidden"
     >
-      {/* 3D Video Background */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-20"
-        >
-          <source src="/videos/about-bg.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/70 via-obsidian-950/50 to-obsidian-950/80" />
-      </div>
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(16,185,129,0.04),transparent_60%)] pointer-events-none z-[1]" />
 
@@ -100,14 +87,33 @@ export default function About() {
             viewport={{ once: true }}
             className="relative"
           >
-            {/* Decorative frame */}
-            <div className="relative glass-panel p-8 md:p-12 space-y-8">
+            {/* Decorative frame with 3D Video Texture */}
+            <div className="relative glass-panel p-8 md:p-12 space-y-8 overflow-hidden group">
+              {/* Diegetic Video Background (2026 Trend) */}
+              <div 
+                className="absolute inset-0 z-0 opacity-20 group-hover:opacity-50 transition-opacity duration-1000 mix-blend-screen pointer-events-none" 
+                style={{ 
+                  maskImage: "linear-gradient(to bottom right, black 20%, transparent 80%)", 
+                  WebkitMaskImage: "linear-gradient(to bottom right, black 20%, transparent 80%)" 
+                }}
+              >
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000"
+                >
+                  <source src="/videos/about-bg.mp4" type="video/mp4" />
+                </video>
+              </div>
+
               {/* Animated corner accents */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-emerald-500/30" />
+              <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30 z-10" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-emerald-500/30 z-10" />
 
               {/* Initials */}
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <div className="relative z-10 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center backdrop-blur-md">
                 <span className="font-serif text-3xl md:text-4xl text-emerald-400 font-light">
                   JC
                 </span>
