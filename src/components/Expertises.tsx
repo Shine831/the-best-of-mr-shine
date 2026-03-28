@@ -57,7 +57,7 @@ export default function Expertises() {
 
   return (
     <section id="expertises" ref={targetRef} className="relative h-[300vh] bg-obsidian-950">
-      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+      <div className="sticky top-0 h-[100svh] flex items-center overflow-hidden">
         
         {/* Depth Parallax background text */}
         <motion.div 

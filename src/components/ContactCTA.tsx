@@ -6,7 +6,7 @@ import { Send } from "lucide-react";
 
 export default function ContactCTA() {
   return (
-    <section id="contact" className="relative min-h-screen flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden py-40">
+    <section id="contact" className="relative min-h-[100svh] flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden py-40">
       
       {/* Ambient bottom glow with refined intensity */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120vw] h-[60vh] bg-[radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.08)_0%,transparent_70%)] pointer-events-none mix-blend-screen" />

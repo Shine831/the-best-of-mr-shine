@@ -34,7 +34,7 @@ export default function Hero() {
   const title = "DIGITAL OBSIDIAN";
   
   return (
-    <section ref={container} className="relative h-[120vh] flex flex-col items-center justify-center overflow-hidden bg-obsidian-950">
+    <section ref={container} className="relative min-h-[120svh] flex flex-col items-center justify-center overflow-hidden bg-obsidian-950">
       {/* 2026 Premium Video Orb (Cinematic Portal) */}
       <motion.div 
         style={{ scale }}
