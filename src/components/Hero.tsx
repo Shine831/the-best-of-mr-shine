@@ -35,8 +35,22 @@ export default function Hero() {
   
   return (
     <section ref={container} className="relative h-[120vh] flex flex-col items-center justify-center overflow-hidden bg-obsidian-950">
+      {/* 3D Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+        >
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/60 via-obsidian-950/40 to-obsidian-950/90" />
+      </div>
+
       {/* Cinematic Grid Reveal */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+      <div className="absolute inset-0 z-[1] opacity-20 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(16,185,129,0.05),transparent)]" />
       </div>

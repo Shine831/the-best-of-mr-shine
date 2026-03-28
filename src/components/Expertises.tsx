@@ -59,6 +59,20 @@ export default function Expertises() {
     <section id="expertises" ref={targetRef} className="relative h-[300vh] bg-obsidian-950">
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         
+        {/* 3D Video Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-15"
+          >
+            <source src="/videos/expertises-bg.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950/80 via-obsidian-950/40 to-obsidian-950/80" />
+        </div>
+
         {/* Depth Parallax background text */}
         <motion.div 
           style={{ x: backgroundX }}

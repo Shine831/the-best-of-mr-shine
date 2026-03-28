@@ -61,8 +61,21 @@ export default function About() {
       ref={ref}
       className="relative py-32 md:py-40 bg-obsidian-950 overflow-hidden"
     >
+      {/* 3D Video Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-20"
+        >
+          <source src="/videos/about-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-b from-obsidian-950/70 via-obsidian-950/50 to-obsidian-950/80" />
+      </div>
       {/* Background glow */}
-      <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(16,185,129,0.04),transparent_60%)] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(16,185,129,0.04),transparent_60%)] pointer-events-none z-[1]" />
 
       <div className="max-w-[90rem] mx-auto px-4 md:px-8 lg:px-16">
         {/* Section tag */}
