@@ -48,20 +48,40 @@ export default function ContactCTA() {
               aria-label="Contacter Jean Claude Schimit Baha via WhatsApp"
               className="group relative flex items-center justify-center w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full"
             >
-              {/* Animated outer ring */}
-              <div className="absolute inset-0 rounded-full border border-white/5 group-hover:border-emerald-500/50 transition-all duration-1000 group-hover:scale-110" />
-              <div className="absolute inset-4 rounded-full border border-white/10 group-hover:border-emerald-400/30 transition-all duration-700" />
+              {/* Animated outer rings (Concentric Orbit) */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 rounded-full border border-dashed border-white/10 group-hover:border-emerald-500/50 transition-colors duration-1000"
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-10 rounded-full border border-white/5 group-hover:border-emerald-400/30 transition-colors duration-700"
+              />
+              <div className="absolute inset-20 rounded-full border border-white/10" />
               
-              {/* Liquid distortion background */}
-              <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/5 transition-colors duration-1000 blur-3xl" />
+              {/* Liquid distortion core */}
+              <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-colors duration-1000 blur-3xl liquid-filter scale-110" />
 
               <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-500 px-8 text-center relative z-10">
-                <span className="font-serif text-4xl md:text-6xl uppercase tracking-widest mb-8 leading-tight">
+                <span className="font-serif text-4xl md:text-6xl uppercase tracking-widest mb-8 leading-tight chromatic-aberration">
                   Déployer<br/><span className="text-emerald-400 group-hover:text-emerald-300">L&apos;Éclat</span>
                 </span>
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700">
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      "0 0 20px rgba(16, 185, 129, 0)",
+                      "0 0 40px rgba(16, 185, 129, 0.4)",
+                      "0 0 20px rgba(16, 185, 129, 0)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 transition-all duration-700"
+                >
                   <Send strokeWidth={1} className="w-8 h-8 md:w-10 md:h-10 text-emerald-400 group-hover:text-white transition-colors duration-500" />
-                </div>
+                </motion.div>
               </div>
 
               {/* Orbiting element */}

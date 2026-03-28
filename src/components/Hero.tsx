@@ -15,6 +15,7 @@ export default function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 500]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const liquidScale = useTransform(scrollYProgress, [0, 0.5, 1], [20, 60, 20]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -23,13 +24,20 @@ export default function Hero() {
         y: (e.clientY / window.innerHeight - 0.5) * 40,
       });
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const springConfig = { stiffness: 100, damping: 30, mass: 0.5 };
   const mouseXSpring = useSpring(mousePosition.x, springConfig);
   const mouseYSpring = useSpring(mousePosition.y, springConfig);
+  const rotateYSpring = useSpring(0, springConfig);
+  const rotateXSpring = useSpring(0, springConfig);
+
+  useEffect(() => {
+    rotateYSpring.set(mousePosition.x * 0.5);
+    rotateXSpring.set(-mousePosition.y * 0.5);
+  }, [mousePosition, rotateYSpring, rotateXSpring]);
 
   const title = "DIGITAL OBSIDIAN";
   
@@ -53,6 +61,7 @@ export default function Hero() {
               loop
               muted
               playsInline
+              style={{ filter: "url(#hero-liquid-filter)" }}
               className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-screen"
             >
               <source src="/videos/hero-bg.mp4" type="video/mp4" />
@@ -94,10 +103,17 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Fluid Kinetic Typography */}
-        <h1 className="font-serif text-6xl md:text-9xl lg:text-[12rem] leading-[0.85] tracking-tighter uppercase mb-12 flex flex-wrap justify-center overflow-hidden py-4">
+        {/* Fluid Kinetic Typography with 3D Rotation */}
+        <motion.h1
+          style={{
+            rotateX: rotateXSpring,
+            rotateY: rotateYSpring,
+            perspective: "1000px"
+          }}
+          className="font-serif text-6xl md:text-9xl lg:text-[12rem] leading-[0.85] tracking-tighter uppercase mb-12 flex flex-wrap justify-center overflow-visible py-4 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+        >
           {title.split(" ").map((word, wordIndex) => (
-            <span key={wordIndex} className="inline-block overflow-hidden mx-4 lg:mx-8">
+            <span key={wordIndex} className="inline-block mx-4 lg:mx-8">
               {word.split("").map((char, charIndex) => (
                 <motion.span
                   key={charIndex}
@@ -110,17 +126,18 @@ export default function Hero() {
                   }}
                   whileHover={{
                     y: -20,
-                    color: "#10b981",
+                    color: "#00ff9d",
+                    scale: 1.1,
                     transition: { duration: 0.3, ease: "easeOut" }
                   }}
-                  className="inline-block cursor-default select-none"
+                  className="inline-block cursor-default select-none chromatic-aberration"
                 >
                   {char}
                 </motion.span>
               ))}
             </span>
           ))}
-        </h1>
+        </motion.h1>
 
         {/* High-End Description */}
         <motion.div
@@ -155,12 +172,18 @@ export default function Hero() {
         </span>
       </motion.div>
 
-      {/* SVG Filters definitions */}
+      {/* SVG Liquid Filter for Hero Video */}
       <svg className="hidden">
         <defs>
-          <filter id="liquid-filter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" />
+          <filter id="hero-liquid-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" result="noise">
+              <animate attributeName="baseFrequency" values="0.015;0.02;0.015" dur="10s" repeatCount="indefinite" />
+            </feTurbulence>
+            <motion.feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale={liquidScale}
+            />
           </filter>
         </defs>
       </svg>

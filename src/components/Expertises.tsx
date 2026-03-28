@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring, useMotionTemplate, MotionValue } from "framer-motion";
+import { useRef, memo } from "react";
 import { ArrowUpRight, Zap, Shield, Cpu } from "lucide-react";
 
 const expertises = [
@@ -68,8 +68,8 @@ export default function Expertises() {
         </motion.div>
 
         <motion.div style={{ x }} className="flex gap-8 md:gap-12 px-[5vw] md:px-[15vw]">
-          {expertises.map((expertise) => (
-            <ProjectCard key={expertise.id} expertise={expertise} />
+          {expertises.map((expertise, index) => (
+            <ProjectCard key={expertise.id} expertise={expertise} index={index} scrollYProgress={scrollYProgress} />
           ))}
         </motion.div>
       </div>
@@ -88,28 +88,47 @@ interface Expertise {
   color: string;
 }
 
-function ProjectCard({ expertise }: { expertise: Expertise }) {
+const ProjectCard = memo(({ expertise, index, scrollYProgress }: { expertise: Expertise, index: number, scrollYProgress: MotionValue<number> }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { stiffness: 500, damping: 50 };
+  const xSpring = useSpring(mouseX, springConfig);
+  const ySpring = useSpring(mouseY, springConfig);
+
+  const background = useMotionTemplate`radial-gradient(600px circle at ${xSpring}px ${ySpring}px, rgba(0, 255, 157, 0.15), transparent 80%)`;
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
   };
+
+  const cardY = useTransform(
+    scrollYProgress,
+    [index * 0.25, index * 0.25 + 0.25],
+    [100, 0]
+  );
+
+  const cardScale = useTransform(
+    scrollYProgress,
+    [index * 0.25, index * 0.25 + 0.25],
+    [0.9, 1]
+  );
 
   return (
     <motion.div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      className="w-[85vw] md:w-[70vw] lg:w-[60vw] h-[75vh] shrink-0 flex flex-col justify-end p-6 md:p-10 lg:p-12 glass-panel relative overflow-hidden group cursor-none"
+      style={{ y: cardY, scale: cardScale }}
+      className="w-[85vw] md:w-[70vw] lg:w-[60vw] h-[75vh] shrink-0 flex flex-col justify-end p-6 md:p-10 lg:p-12 liquid-glass relative overflow-hidden group cursor-none"
     >
-      {/* 2026 Micro-Interaction: Video Texture Reveal on Hover */}
+      {/* 2026 Micro-Interaction: Video Texture Reveal on Hover with Liquid Filter */}
       <div 
-        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-40 transition-all duration-1000 mix-blend-screen pointer-events-none" 
+        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-40 transition-all duration-1000 mix-blend-screen pointer-events-none liquid-filter"
         style={{ 
           maskImage: "radial-gradient(circle at center, black 0%, transparent 80%)", 
           WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 80%)" 
@@ -126,12 +145,10 @@ function ProjectCard({ expertise }: { expertise: Expertise }) {
         </video>
       </div>
 
-      {/* Light-tracking border (Glassmorphism v3) */}
-      <div
+      {/* Light-tracking border (High-Frequency) */}
+      <motion.div
         className="absolute inset-0 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(16, 185, 129, 0.1), transparent 40%)`
-        }}
+        style={{ background }}
       />
 
       {/* Dynamic Background Gradient */}
@@ -189,4 +206,6 @@ function ProjectCard({ expertise }: { expertise: Expertise }) {
       </div>
     </motion.div>
   );
-}
+});
+
+ProjectCard.displayName = "ProjectCard";
