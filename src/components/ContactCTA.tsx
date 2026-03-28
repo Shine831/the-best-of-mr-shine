@@ -2,11 +2,10 @@
 
 import { motion } from "framer-motion";
 import MagneticButton from "./MagneticButton";
-import { ArrowUpRight } from "lucide-react";
+import { Send, ArrowUpRight } from "lucide-react";
 
 export default function ContactCTA() {
   const currentYear = new Date().getFullYear();
-
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden pt-32">
       
@@ -47,7 +46,7 @@ export default function ContactCTA() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
               />
-              
+
               <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/5 transition-colors duration-700 blur-3xl" />
 
               <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-500 px-6">
@@ -58,6 +57,15 @@ export default function ContactCTA() {
                   <ArrowUpRight strokeWidth={1} className="w-10 h-10 md:w-12 md:h-12 text-emerald-400 group-hover:text-emerald-300 transition-colors duration-500" />
                 </div>
               </div>
+
+              {/* Orbiting element */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 pointer-events-none"
+              >
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-500/50 blur-[2px]" />
+              </motion.div>
             </a>
           </MagneticButton>
         </motion.div>

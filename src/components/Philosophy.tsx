@@ -54,6 +54,13 @@ export default function Philosophy() {
               Antoine de Saint-Exupéry
             </p>
           </div>
+
+          <motion.div
+            initial={{ height: 0 }}
+            whileInView={{ height: "100px" }}
+            transition={{ duration: 1.5, ease: "circOut", delay: 0.5 }}
+            className="w-px bg-gradient-to-b from-transparent via-emerald-500/30 to-transparent"
+          />
         </motion.div>
       </div>
     </section>

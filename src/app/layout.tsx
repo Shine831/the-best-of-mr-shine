@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
+import Cursor from "@/components/Cursor";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -46,6 +47,11 @@ export const metadata: Metadata = {
     "Full Stack Developer",
     "Next.js Developer",
     "React Expert",
+    "Automatisation IA",
+    "Zapier & n8n Expert",
+    "Anthropic AI",
+    "Manus AI Autonomous Agents",
+    "Grok & Google AI",
     "Ingénierie Logicielle",
     "Solutions Web Haut de Gamme",
     "Création site web premium"
@@ -132,7 +138,12 @@ export default function RootLayout({
         ],
         "description": siteConfig.description,
         "priceRange": "$$$",
-        "knowsAbout": ["React", "Nest.js", "Angular", "Java", "Next.js", "Full Stack Development", "Architecture Logicielle"]
+        "knowsAbout": [
+          "React", "Nest.js", "Angular", "Java", "Next.js",
+          "Full Stack Development", "Architecture Logicielle",
+          "Automatisation IA", "Zapier Workflow", "n8n Local Configurations",
+          "Anthropic Tools", "Manus AI", "Grok Integration", "Google AI Environment"
+        ]
       }
     ]
   };
@@ -164,6 +175,7 @@ export default function RootLayout({
         </noscript>
         {/* End GTM (noscript) */}
         <div className="noise-bg pointer-events-none"></div>
+        <Cursor />
         <SmoothScroll>
           <div className="relative z-10 w-full flex flex-col min-h-screen">
             {children}

@@ -1,10 +1,11 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function Hero() {
   const container = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end start"]
@@ -110,7 +111,7 @@ export default function Hero() {
         </motion.p>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Floating Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -127,7 +128,20 @@ export default function Hero() {
             className="absolute top-0 left-0 w-full h-1/3 bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.8)]"
           />
         </div>
+        <span className="font-mono text-[9px] tracking-[0.6em] text-zinc-500 uppercase ml-2">
+          Scroll
+        </span>
       </motion.div>
+
+      {/* SVG Filters definitions */}
+      <svg className="hidden">
+        <defs>
+          <filter id="liquid-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" />
+          </filter>
+        </defs>
+      </svg>
     </section>
   );
 }
