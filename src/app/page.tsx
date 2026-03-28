@@ -1,4 +1,5 @@
 import Preloader from "@/components/Preloader";
+import SvgFilters from "@/components/SvgFilters";
 import { Header } from "@/components/Header";
 import Hero from "@/components/Hero";
 import TechStack from "@/components/TechStack";
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col bg-black">
       <Preloader />
+      <SvgFilters />
       <Header />
       <Hero />
       <TechStack />
