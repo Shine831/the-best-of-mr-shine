@@ -6,14 +6,7 @@ import StaggeredText from "./StaggeredText";
 import EmergingText from "./EmergingText";
 import GlintText from "./GlintText";
 
-interface ExperienceData {
-  role: string;
-  company: string;
-  period: string;
-  description: string;
-}
-
-const experiences: ExperienceData[] = [
+const experiences = [
   {
     role: "Système de Surveillance Autonome",
     company: "AEROGUARD NEXUS",
@@ -94,7 +87,7 @@ function ReflectionCard({ children }: { children: React.ReactNode }) {
 }
 
 
-function ExperienceItem({ exp, index }: { exp: ExperienceData; index: number }) {
+function ExperienceItem({ exp, index }: { exp: any, index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
