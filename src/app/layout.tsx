@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Playfair_Display, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import Cursor from "@/components/Cursor";
+import SvgFilters from "@/components/SvgFilters";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -175,10 +176,13 @@ export default function RootLayout({
         </noscript>
         {/* End GTM (noscript) */}
         <div className="noise-bg pointer-events-none"></div>
+        <SvgFilters />
         <Cursor />
         <SmoothScroll>
           <div className="relative z-10 w-full flex flex-col min-h-screen">
-            {children}
+            <main id="main-content">
+              {children}
+            </main>
           </div>
         </SmoothScroll>
       </body>
