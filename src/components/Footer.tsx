@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const socials = [
   { icon: Github, href: "https://github.com/Shine831", label: "GitHub" },
-  { icon: Linkedin, href: "https://www.linkedin.com/in/schmit-claude-bha993b6", label: "LinkedIn" },
+  { icon: Linkedin, href: "https://www.linkedin.com/in/schimit-baha-jean-claude-bba5903ab", label: "LinkedIn" },
   { icon: Mail, href: "mailto:jcbaha58@gmail.com", label: "Email" },
 ];
 

@@ -9,7 +9,7 @@ const links = [
   { icon: Mail, label: "Email", value: "jcbaha58@gmail.com", href: "mailto:jcbaha58@gmail.com", accent: "#2997ff" },
   { icon: Phone, label: "Téléphone", value: "+237 699 477 055", href: "tel:+237699477055", accent: "#30d158" },
   { icon: MessageCircle, label: "WhatsApp", value: "Discutons", href: "https://wa.me/237699477055", accent: "#30d158" },
-  { icon: Linkedin, label: "LinkedIn", value: "Profil LinkedIn", href: "https://www.linkedin.com/in/schmit-claude-bha993b6", accent: "#0a66c2" },
+  { icon: Linkedin, label: "LinkedIn", value: "Profil LinkedIn", href: "https://www.linkedin.com/in/schimit-baha-jean-claude-bba5903ab", accent: "#0a66c2" },
   { icon: Github, label: "GitHub", value: "Shine831", href: "https://github.com/Shine831", accent: "#f5f5f7" },
 ];
 

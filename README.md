@@ -72,7 +72,7 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) (version 18+ recommandée) e
 > Expert dans la conception d'interfaces premium, la maîtrise de bases de données, et la domotique algorithmique (Agents IA connectés avec Zapier et n8n). 
 
 - **GitHub :** [@Shine831](https://github.com/Shine831)
-- **LinkedIn :** [Schmit Claude Baha](https://www.linkedin.com/in/schmit-claude-bha993b6)
+- **LinkedIn :** [Schmit Claude Baha](https://www.linkedin.com/in/schimit-baha-jean-claude-bba5903ab)
 - **Live Site :** [the-best-of-mr-shine.vercel.app](https://the-best-of-mr-shine.vercel.app)
 
 ---

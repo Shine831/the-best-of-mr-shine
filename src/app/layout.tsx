@@ -11,7 +11,7 @@ const siteConfig = {
   ogImage: "https://the-best-of-mr-shine.vercel.app/og.png",
   links: {
     github: "https://github.com/Shine831",
-    linkedin: "https://www.linkedin.com/in/schmit-claude-bha993b6",
+    linkedin: "https://www.linkedin.com/in/schimit-baha-jean-claude-bba5903ab",
   },
 };
 
