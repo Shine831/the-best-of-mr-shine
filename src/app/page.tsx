@@ -1,27 +1,25 @@
 import Preloader from "@/components/Preloader";
 import { Header } from "@/components/Header";
 import Hero from "@/components/Hero";
+import BentoProjects from "@/components/BentoProjects";
 import TechStack from "@/components/TechStack";
-import ProjectsGallery from "@/components/ProjectsGallery";
 import About from "@/components/About";
-import Expertises from "@/components/Expertises";
+import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
-import Philosophy from "@/components/Philosophy";
 import ContactCTA from "@/components/ContactCTA";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-black">
+    <main className="flex min-h-screen flex-col bg-apple-black">
       <Preloader />
       <Header />
       <Hero />
+      <BentoProjects />
       <TechStack />
-      <ProjectsGallery />
       <About />
-      <Expertises />
+      <Services />
       <Testimonials />
-      <Philosophy />
       <ContactCTA />
       <Footer />
     </main>

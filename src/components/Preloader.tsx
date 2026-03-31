@@ -1,75 +1,90 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Preloader() {
+  const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const duration = 2500; // 2.5s loading sequence
-    const interval = 20;
-    const steps = duration / interval;
-    let currentStep = 0;
+    let frame: number;
+    let start: number | null = null;
+    const duration = 1800;
 
-    const timer = setInterval(() => {
-      currentStep++;
-      const nextProgress = Math.min(Math.floor(easeOutExpo(currentStep / steps) * 100), 100);
-      setProgress(nextProgress);
-
-      if (currentStep >= steps) {
-        clearInterval(timer);
-        setTimeout(() => setIsLoading(false), 500); // Small pause before exit
+    const animate = (ts: number) => {
+      if (!start) start = ts;
+      const elapsed = ts - start;
+      const p = Math.min(elapsed / duration, 1);
+      // Apple-like easing curve
+      const eased = 1 - Math.pow(1 - p, 3);
+      setProgress(eased * 100);
+      if (p < 1) {
+        frame = requestAnimationFrame(animate);
+      } else {
+        setTimeout(() => setLoading(false), 500);
       }
-    }, interval);
+    };
 
-    return () => clearInterval(timer);
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
   }, []);
-
-  // Easing function for smoother counter
-  function easeOutExpo(x: number): number {
-    return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
-  }
 
   return (
     <AnimatePresence>
-      {isLoading && (
+      {loading && (
         <motion.div
-          initial={{ y: 0 }}
-          exit={{ 
-            y: "-100%", 
-            transition: { duration: 1.2, ease: [0.76, 0, 0.24, 1] } 
-          }}
-          className="fixed inset-0 z-[1000] bg-[#0a0a0a] text-white flex flex-col justify-end p-8 md:p-16 overflow-hidden"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-void"
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="flex justify-between items-end">
-            <motion.div 
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
-              className="flex flex-col"
+          {/* Ambient glow */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="orb orb-blue animate-orb-1 w-[500px] h-[500px]" style={{ top: "25%", left: "15%" }} />
+            <div className="orb orb-purple animate-orb-2 w-[400px] h-[400px]" style={{ bottom: "20%", right: "15%" }} />
+          </div>
+
+          <div className="relative z-10 flex flex-col items-center gap-8">
+            {/* Monogram */}
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0, filter: "blur(30px)" }}
+              animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span className="font-sans text-xs md:text-sm tracking-[0.3em] text-zinc-500 uppercase">
-                Initialization
-              </span>
-              <span className="font-serif text-2xl md:text-4xl tracking-[0.1em] text-zinc-100 mt-2">
-                Digital Obsidian
-              </span>
+              <div className="w-24 h-24 rounded-[1.75rem] liquid-glass flex items-center justify-center">
+                <span className="text-3xl font-bold font-[var(--font-grotesk)] text-shimmer relative z-10">
+                  S
+                </span>
+              </div>
             </motion.div>
-            
-            <motion.div 
-              className="flex items-start"
+
+            {/* Name */}
+            <motion.div
+              className="flex flex-col items-center gap-1"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <p className="text-label-tertiary text-xs tracking-[0.35em] uppercase">
+                Portfolio
+              </p>
+            </motion.div>
+
+            {/* Progress bar */}
+            <motion.div
+              className="w-40 h-[2px] rounded-full overflow-hidden"
+              style={{ background: "rgba(255,255,255,0.06)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
+              transition={{ delay: 0.8 }}
             >
-              <span className="font-mono text-7xl md:text-[12rem] leading-none tracking-tighter text-zinc-100">
-                {progress}
-              </span>
-              <span className="font-mono text-2xl md:text-5xl text-[#10b981] leading-none mt-2 md:mt-6 ml-1">
-                %
-              </span>
+              <div
+                className="h-full rounded-full transition-none"
+                style={{
+                  width: `${progress}%`,
+                  background: "linear-gradient(90deg, #2997ff, #bf5af2, #ff375f)",
+                }}
+              />
             </motion.div>
           </div>
         </motion.div>

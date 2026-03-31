@@ -1,80 +1,140 @@
 "use client";
 
-import { motion } from "framer-motion";
-import MagneticButton from "./MagneticButton";
-import { Send } from "lucide-react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Mail, Phone, MessageCircle, Github, Linkedin } from "lucide-react";
+import AnimatedText from "./AnimatedText";
+
+const links = [
+  { icon: Mail, label: "Email", value: "jcbaha58@gmail.com", href: "mailto:jcbaha58@gmail.com", accent: "#2997ff" },
+  { icon: Phone, label: "Téléphone", value: "+237 699 477 055", href: "tel:+237699477055", accent: "#30d158" },
+  { icon: MessageCircle, label: "WhatsApp", value: "Discutons", href: "https://wa.me/237699477055", accent: "#30d158" },
+  { icon: Linkedin, label: "LinkedIn", value: "Profil LinkedIn", href: "https://www.linkedin.com/in/schmit-claude-bha993b6", accent: "#0a66c2" },
+  { icon: Github, label: "GitHub", value: "Shine831", href: "https://github.com/Shine831", accent: "#f5f5f7" },
+];
 
 export default function ContactCTA() {
-  return (
-    <section id="contact" className="relative min-h-[100svh] flex flex-col items-center justify-center bg-obsidian-950 px-6 overflow-hidden py-40">
-      
-      {/* Ambient bottom glow with refined intensity */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120vw] h-[60vh] bg-[radial-gradient(ellipse_at_bottom,rgba(16,185,129,0.08)_0%,transparent_70%)] pointer-events-none mix-blend-screen" />
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const orbScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.6, 1.1, 0.8]);
+  const textY = useTransform(scrollYProgress, [0, 0.5], ["30px", "0px"]);
 
-      {/* Background Kinetic Text */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.02] select-none">
-        <span className="font-serif text-[30vw] font-black uppercase tracking-tighter block leading-none">
-          SHINE
-        </span>
+  return (
+    <section id="contact" ref={sectionRef} className="section-space relative overflow-hidden">
+      <div className="section-divider absolute top-0 left-0" />
+
+      {/* Animated orbs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          className="orb orb-blue animate-orb-1 w-[600px] h-[600px]"
+          style={{ top: "20%", left: "10%", scale: orbScale }}
+        />
+        <motion.div
+          className="orb orb-purple animate-orb-2 w-[500px] h-[500px]"
+          style={{ bottom: "10%", right: "5%", scale: orbScale }}
+        />
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center w-full z-10 relative">
+      {/* Vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, transparent, #000 100%)" }}
+      />
+
+      <div className="section-wrap relative z-10">
+        {/* Header */}
+        <div className="text-center mb-10 md:mb-14">
+          <motion.p
+            className="text-accent-blue text-xs font-semibold tracking-[0.25em] uppercase mb-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            Contact
+          </motion.p>
+          <motion.div style={{ y: textY }}>
+            <AnimatedText
+              text="Travaillons ensemble."
+              tag="h2"
+              className="text-[clamp(2.25rem,7vw,5.5rem)] font-display font-bold text-label leading-[1]"
+            />
+          </motion.div>
+          <motion.p
+            className="text-label-secondary text-sm sm:text-base mt-5 max-w-md mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            Un projet en tête ? Discutons de comment le transformer en réalité.
+          </motion.p>
+        </div>
+
+        {/* CTA Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 100 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12"
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="flex flex-col items-center space-y-20 w-full"
+          transition={{ delay: 0.5, duration: 0.8 }}
         >
-          <div className="space-y-6 text-center">
-            <motion.span
-              initial={{ opacity: 0, letterSpacing: "0em" }}
-              whileInView={{ opacity: 1, letterSpacing: "0.8em" }}
-              transition={{ duration: 2, delay: 0.5 }}
-              className="font-mono text-[10px] md:text-xs text-emerald-500 uppercase block"
-            >
-              INITIALISER LA CONNEXION
-            </motion.span>
-            <h2 className="font-serif text-5xl md:text-8xl lg:text-9xl text-white tracking-tighter uppercase leading-none">
-              Prêt pour le <br/> <span className="italic text-zinc-500">Prochain Niveau ?</span>
-            </h2>
-          </div>
-
-          <MagneticButton strength={30}>
-            <a
-              href="https://wa.me/237699477055?text=Protocole%20Shine%20activé.%20Je%20souhaite%20discuter%20d'un%20projet%20critique."
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Contacter Jean Claude Schimit Baha via WhatsApp"
-              className="group relative flex items-center justify-center w-[300px] h-[300px] md:w-[450px] md:h-[450px] rounded-full"
-            >
-              {/* Animated outer ring */}
-              <div className="absolute inset-0 rounded-full border border-white/5 group-hover:border-emerald-500/50 transition-all duration-1000 group-hover:scale-110" />
-              <div className="absolute inset-4 rounded-full border border-white/10 group-hover:border-emerald-400/30 transition-all duration-700" />
-              
-              {/* Liquid distortion background */}
-              <div className="absolute inset-0 rounded-full bg-emerald-500/0 group-hover:bg-emerald-500/5 transition-colors duration-1000 blur-3xl" />
-
-              <div className="flex flex-col items-center text-zinc-100 group-hover:text-white transition-colors duration-500 px-8 text-center relative z-10">
-                <span className="font-serif text-4xl md:text-6xl uppercase tracking-widest mb-8 leading-tight">
-                  Déployer<br/><span className="text-emerald-400 group-hover:text-emerald-300">L&apos;Éclat</span>
-                </span>
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.5)] transition-all duration-700">
-                  <Send strokeWidth={1} className="w-8 h-8 md:w-10 md:h-10 text-emerald-400 group-hover:text-white transition-colors duration-500" />
-                </div>
-              </div>
-
-              {/* Orbiting element */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 pointer-events-none"
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-emerald-500/50 blur-[2px]" />
-              </motion.div>
-            </a>
-          </MagneticButton>
+          <a href="mailto:jcbaha58@gmail.com" className="btn-apple text-sm gap-2">
+            <Mail className="w-4 h-4" />
+            Envoyer un email
+          </a>
+          <a
+            href="https://wa.me/237699477055"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-ghost text-sm gap-2"
+          >
+            <MessageCircle className="w-4 h-4" />
+            WhatsApp
+          </a>
         </motion.div>
+
+        {/* Contact cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 max-w-4xl mx-auto">
+          {links.map((item, i) => (
+            <motion.a
+              key={item.label}
+              href={item.href}
+              target={item.href.startsWith("http") ? "_blank" : undefined}
+              rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+              className="glass-card p-4 sm:p-5 flex flex-col items-center text-center gap-2.5 group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 + i * 0.08, duration: 0.6 }}
+            >
+              <div className="absolute top-0 left-0 right-0 h-px z-10" style={{ background: `linear-gradient(90deg, transparent, ${item.accent}30, transparent)` }} />
+              <div
+                className="relative z-10 w-10 h-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+                style={{ background: `${item.accent}12` }}
+              >
+                <item.icon className="w-4 h-4" style={{ color: item.accent }} strokeWidth={1.5} />
+              </div>
+              <div className="relative z-10">
+                <p className="text-[10px] text-label-tertiary uppercase tracking-wider">{item.label}</p>
+                <p className="text-[11px] text-label/70 font-medium mt-0.5">{item.value}</p>
+              </div>
+            </motion.a>
+          ))}
+        </div>
+
+        {/* Location */}
+        <motion.p
+          className="text-center text-xs text-label-tertiary mt-10"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 0.5 }}
+          viewport={{ once: true }}
+          transition={{ delay: 1 }}
+        >
+          📍 Ndogpassi III, Douala — Cameroun
+        </motion.p>
       </div>
     </section>
   );

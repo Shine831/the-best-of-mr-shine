@@ -1,182 +1,148 @@
 "use client";
 
-import { motion, useScroll, AnimatePresence } from "framer-motion";
-import MagneticButton from "./MagneticButton";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const navLinks = [
+const navItems = [
   { label: "Projets", href: "#projets" },
-  { label: "À Propos", href: "#a-propos" },
-  { label: "Expertises", href: "#expertises" },
+  { label: "Expertise", href: "#expertise" },
+  { label: "Parcours", href: "#parcours" },
+  { label: "Services", href: "#services" },
   { label: "Contact", href: "#contact" },
 ];
 
-export const Header = () => {
-  const { scrollY } = useScroll();
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+export function Header() {
+  const [visible, setVisible] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    return scrollY.on("change", (latest) => {
-      setIsScrolled(latest > 50);
-    });
-  }, [scrollY]);
-
-  // Scroll spy
-  useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + window.innerHeight / 3;
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sectionIds[i]);
-        if (el && el.offsetTop <= scrollPos) {
-          setActiveSection(sectionIds[i]);
-          return;
-        }
-      }
-      setActiveSection("");
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Show nav after preloader
+    const timer = setTimeout(() => setVisible(true), 2400);
+    return () => clearTimeout(timer);
   }, []);
 
-  // Lock body scroll when menu is open
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [isMenuOpen]);
+  }, [mobileOpen]);
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 2.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 md:py-5 transition-all duration-500 ${
-          isScrolled
-            ? "bg-black/60 backdrop-blur-xl border-b border-white/5"
-            : "bg-transparent border-transparent"
-        }`}
+      {/* ─── Apple Floating Pill Navigation ─── */}
+      <motion.nav
+        className="nav-pill"
+        initial={{ y: -80, opacity: 0 }}
+        animate={visible ? { y: 0, opacity: 1 } : {}}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       >
-        <Link
-          href="/"
-          className="font-serif tracking-[0.2em] text-sm md:text-lg text-zinc-100 hover:text-white transition-colors uppercase z-10"
-          aria-label="Retour à l'accueil du portfolio The Best Of Mr Shine"
+        {/* Logo */}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="flex items-center justify-center h-9 w-9 rounded-full mr-1"
+          style={{ background: "linear-gradient(135deg, rgba(41,151,255,0.15), rgba(191,90,242,0.15))" }}
         >
-          MR SHINE
-        </Link>
+          <span className="text-[11px] font-bold text-gradient-blue font-[var(--font-grotesk)]">S</span>
+        </a>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`relative font-mono text-[10px] tracking-[0.3em] uppercase transition-colors duration-300 ${
-                activeSection === link.href.replace("#", "")
-                  ? "text-emerald-400"
-                  : "text-zinc-500 hover:text-zinc-200"
-              }`}
-            >
-              {link.label}
-              {activeSection === link.href.replace("#", "") && (
-                <motion.div
-                  layoutId="nav-indicator"
-                  className="absolute -bottom-1 left-0 right-0 h-px bg-emerald-500"
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                />
-              )}
+        {/* Desktop Links */}
+        <div className="hidden md:flex items-center">
+          {navItems.map((item) => (
+            <a key={item.href} href={item.href}>
+              {item.label}
             </a>
           ))}
-        </nav>
-
-        <div className="flex items-center gap-4">
-          <MagneticButton strength={30}>
-            <a
-              href="https://wa.me/237699477055?text=Protocole%20Shine%20activé.%20Je%20souhaite%20discuter%20d'un%20projet%20critique."
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Contacter Jean Claude Schimit Baha sur WhatsApp pour un projet"
-              className="hidden md:flex relative px-6 py-2 overflow-hidden rounded-full group glass-panel items-center gap-3 transition-colors hover:border-emerald-500/30"
-            >
-              <span className="absolute inset-0 w-full h-full bg-emerald-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-              <span className="relative font-mono text-[10px] tracking-[0.2em] font-bold text-zinc-100 uppercase mt-px">
-                Engager
-              </span>
-            </a>
-          </MagneticButton>
-
-          {/* Mobile burger */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden relative z-[60] w-10 h-10 flex items-center justify-center"
-            aria-label="Menu de navigation"
-          >
-            <motion.div
-              animate={{ rotate: isMenuOpen ? 90 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {isMenuOpen ? (
-                <X className="w-5 h-5 text-white" strokeWidth={1.5} />
-              ) : (
-                <Menu className="w-5 h-5 text-zinc-400" strokeWidth={1.5} />
-              )}
-            </motion.div>
-          </button>
         </div>
-      </motion.header>
 
-      {/* Full-screen mobile menu */}
+        {/* CTA */}
+        <a
+          href="#contact"
+          className="hidden md:flex items-center justify-center h-9 px-4 ml-1 rounded-full text-xs font-semibold text-white"
+          style={{
+            background: "linear-gradient(135deg, #2997ff, #0071e3)",
+            fontSize: "12px",
+          }}
+        >
+          Parlons-en
+        </a>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden flex flex-col items-center justify-center w-9 h-9 rounded-full gap-[5px] ml-1"
+          style={{ background: "rgba(255,255,255,0.06)" }}
+          aria-label="Menu"
+        >
+          <motion.span
+            className="block w-4 h-[1.5px] bg-white/70 rounded-full origin-center"
+            animate={mobileOpen ? { rotate: 45, y: 3.25 } : { rotate: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+          <motion.span
+            className="block w-4 h-[1.5px] bg-white/70 rounded-full origin-center"
+            animate={mobileOpen ? { rotate: -45, y: -3.25 } : { rotate: 0, y: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+        </button>
+      </motion.nav>
+
+      {/* ─── Mobile Fullscreen Menu ─── */}
       <AnimatePresence>
-        {isMenuOpen && (
+        {mobileOpen && (
           <motion.div
+            className="fixed inset-0 z-[199] flex flex-col items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[55] bg-black/95 backdrop-blur-2xl flex items-center justify-center"
+            transition={{ duration: 0.4 }}
           >
-            <nav className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-void/95 backdrop-blur-2xl" />
+
+            {/* Animated orbs */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="orb orb-blue animate-orb-1 w-[300px] h-[300px]" style={{ top: "20%", left: "10%" }} />
+              <div className="orb orb-purple animate-orb-2 w-[250px] h-[250px]" style={{ bottom: "15%", right: "10%" }} />
+            </div>
+
+            {/* Links */}
+            <div className="relative z-10 flex flex-col items-center gap-6">
+              {navItems.map((item, i) => (
                 <motion.a
-                  key={link.label}
-                  href={link.href}
-                  initial={{ opacity: 0, y: 30 }}
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-4xl font-display font-bold text-label hover:text-accent-blue transition-colors"
+                  initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+                  exit={{ opacity: 0, y: -30 }}
                   transition={{
-                    duration: 0.5,
-                    delay: i * 0.1,
+                    duration: 0.6,
+                    delay: 0.1 + i * 0.07,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="font-serif text-4xl text-zinc-100 hover:text-emerald-400 uppercase tracking-widest transition-colors duration-300"
                 >
-                  {link.label}
+                  {item.label}
                 </motion.a>
               ))}
+
               <motion.a
-                initial={{ opacity: 0, y: 30 }}
+                href="#contact"
+                onClick={() => setMobileOpen(false)}
+                className="btn-apple mt-6 text-sm"
+                initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                href="https://wa.me/237699477055?text=Protocole%20Shine%20activé.%20Je%20souhaite%20discuter%20d'un%20projet%20critique."
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="mt-8 px-8 py-3 rounded-full border border-emerald-500/30 bg-emerald-500/10 font-mono text-xs tracking-[0.3em] text-emerald-400 uppercase"
+                transition={{ delay: 0.55, duration: 0.6 }}
               >
-                WhatsApp
+                Parlons de votre projet
               </motion.a>
-            </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
-};
+}

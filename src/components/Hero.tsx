@@ -1,169 +1,145 @@
 "use client";
 
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef, Suspense } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import dynamic from "next/dynamic";
+import AnimatedText from "./AnimatedText";
+
+const HeroOrb = dynamic(() => import("./HeroOrb"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 z-0">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[500px] md:h-[500px] rounded-full bg-gradient-to-br from-accent-blue/10 via-accent-purple/5 to-accent-teal/5 blur-3xl animate-orb-1" />
+    </div>
+  ),
+});
 
 export default function Hero() {
-  const container = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start start", "end start"]
+    target: containerRef,
+    offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 500]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  // Parallax transforms — content moves up, orb stays
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const orbScale = useTransform(scrollYProgress, [0, 1], [1, 1.3]);
+  const orbOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 40,
-        y: (e.clientY / window.innerHeight - 0.5) * 40,
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  const springConfig = { stiffness: 100, damping: 30, mass: 0.5 };
-  const mouseXSpring = useSpring(mousePosition.x, springConfig);
-  const mouseYSpring = useSpring(mousePosition.y, springConfig);
-
-  const title = "DIGITAL OBSIDIAN";
-  
   return (
-    <section ref={container} className="relative min-h-[120svh] flex flex-col items-center justify-center overflow-hidden bg-obsidian-950">
-      {/* 2026 Premium Video Orb (Cinematic Portal) */}
-      <motion.div 
-        style={{ scale }}
-        className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
+    <section
+      ref={containerRef}
+      id="hero"
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-24 md:pt-32"
+    >
+      {/* ── Three.js Orb ── */}
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{ scale: orbScale, opacity: orbOpacity }}
       >
-        <div className="relative w-[150vw] h-[150vw] md:w-[100vw] md:h-[100vw] max-w-[1400px] max-h-[1400px]">
-          <div 
-            className="absolute inset-0 rounded-full" 
-            style={{ 
-              maskImage: "radial-gradient(circle at center, black 0%, transparent 60%)", 
-              WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 60%)" 
-            }}
-          >
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-screen"
-            >
-              <source src="/videos/hero-bg.mp4" type="video/mp4" />
-            </video>
-          </div>
-        </div>
+        <Suspense fallback={null}>
+          <HeroOrb />
+        </Suspense>
       </motion.div>
 
-      {/* Cinematic Grid Reveal */}
-      <div className="absolute inset-0 z-[1] opacity-20 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,rgba(16,185,129,0.05),transparent)]" />
+      {/* ── Ambient CSS orbs (fallback depth) ── */}
+      <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
+        <div className="orb orb-blue animate-orb-1 w-[600px] h-[600px]" style={{ top: "10%", left: "15%" }} />
+        <div className="orb orb-purple animate-orb-2 w-[500px] h-[500px]" style={{ bottom: "5%", right: "5%" }} />
+        <div className="orb orb-teal animate-orb-3 w-[300px] h-[300px]" style={{ top: "55%", left: "-5%" }} />
       </div>
 
-      {/* Multi-layered Parallax Mesh Background */}
-      <motion.div
-        style={{ x: mouseXSpring, y: mouseYSpring, scale }}
-        className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
-      >
-        <div className="absolute -top-[10%] -left-[10%] w-[80vw] h-[80vw] rounded-full bg-emerald-900/10 blur-[140px] animate-aurora mix-blend-screen" />
-        <div className="absolute top-[30%] -right-[10%] w-[70vw] h-[70vw] rounded-full bg-zinc-800/20 blur-[140px] animate-aurora mix-blend-screen" style={{ animationDelay: '-7s' }} />
-        <div className="absolute -bottom-[10%] left-[10%] w-[90vw] h-[90vw] rounded-full bg-emerald-500/5 blur-[160px] animate-aurora" style={{ animationDelay: '-14s' }} />
-      </motion.div>
+      {/* ── Radial vignette ── */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 70% 55% at 50% 45%, transparent, #000 100%)",
+        }}
+      />
 
-      <motion.div style={{ y, opacity }} className="relative z-10 flex flex-col items-center text-center px-4 w-full">
-        {/* Advanced Badge */}
+      {/* ── Content ── */}
+      <motion.div
+        className="relative z-10 section-wrap text-center flex flex-col items-center gap-5 px-4"
+        style={{ y: textY, opacity: textOpacity }}
+      >
+        {/* Availability badge */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 2.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-12 group relative"
+          className="liquid-glass !rounded-full px-5 py-2.5 flex items-center gap-2.5"
+          initial={{ opacity: 0, y: 25, filter: "blur(12px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1, delay: 2.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="absolute inset-0 bg-emerald-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <div className="relative px-6 py-2 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl overflow-hidden">
-            <div className="absolute inset-0 w-full h-full animate-beam bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
-            <span className="font-mono text-[10px] tracking-[0.4em] text-emerald-400 uppercase">
-              Architecte IA & Automatisations
-            </span>
-          </div>
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-accent-green opacity-75 animate-ping" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-green" />
+          </span>
+          <span className="text-[11px] sm:text-xs text-label-secondary font-medium tracking-wide">
+            Disponible pour de nouveaux projets
+          </span>
         </motion.div>
 
-        {/* Fluid Kinetic Typography */}
-        <h1 className="font-serif text-6xl md:text-9xl lg:text-[12rem] leading-[0.85] tracking-tighter uppercase mb-12 flex flex-wrap justify-center overflow-hidden py-4">
-          {title.split(" ").map((word, wordIndex) => (
-            <span key={wordIndex} className="inline-block overflow-hidden mx-4 lg:mx-8">
-              {word.split("").map((char, charIndex) => (
-                <motion.span
-                  key={charIndex}
-                  initial={{ y: "110%", rotate: 15, opacity: 0 }}
-                  animate={{ y: 0, rotate: 0, opacity: 1 }}
-                  transition={{
-                    duration: 1.5,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 2.5 + (wordIndex * 0.1) + (charIndex * 0.04),
-                  }}
-                  whileHover={{
-                    y: -20,
-                    color: "#10b981",
-                    transition: { duration: 0.3, ease: "easeOut" }
-                  }}
-                  className="inline-block cursor-default select-none"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </span>
-          ))}
-        </h1>
-
-        {/* High-End Description */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 3.6, ease: "easeOut" }}
-          className="max-w-3xl mx-auto space-y-6"
-        >
-          <p className="font-sans text-lg md:text-2xl text-zinc-400 font-light tracking-wide leading-relaxed">
-            Ingénierie de systèmes <span className="text-white font-medium italic">ultra-critiques</span>, Création d&apos;Agents IA Autonomes (Manus, Anthropic) & Workflows Zapier/N8N.
-          </p>
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent mx-auto" />
-        </motion.div>
-      </motion.div>
-
-      {/* Floating Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 4.5 }}
-        className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6"
-      >
-        <div className="relative w-[1px] h-24 bg-white/5 overflow-hidden">
-          <motion.div
-            animate={{ y: ["-100%", "300%"] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-emerald-400 to-transparent"
+        {/* Main headline — cinematic reveal */}
+        <div className="space-y-0 max-w-5xl mt-2">
+          <AnimatedText
+            text="Jean Claude"
+            tag="h1"
+            className="text-[clamp(2.75rem,8vw,7.5rem)] font-display font-bold tracking-[-0.03em] text-label leading-[0.95]"
+            delay={2.4}
+            staggerDelay={0.05}
+          />
+          <AnimatedText
+            text="Schimit Baha"
+            tag="h1"
+            className="text-[clamp(2.75rem,8vw,7.5rem)] font-display font-bold tracking-[-0.03em] text-gradient-hero leading-[0.95]"
+            delay={2.7}
+            staggerDelay={0.05}
           />
         </div>
-        <span className="font-mono text-[9px] tracking-[0.6em] text-zinc-500 uppercase ml-2">
-          Scroll
-        </span>
-      </motion.div>
 
-      {/* SVG Filters definitions */}
-      <svg className="hidden">
-        <defs>
-          <filter id="liquid-filter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" />
-          </filter>
-        </defs>
-      </svg>
+        {/* Subtitle */}
+        <motion.p
+          className="text-base sm:text-lg md:text-xl text-label-secondary max-w-lg leading-relaxed"
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1, delay: 3.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          Développeur Web Full Stack &{" "}
+          <span className="text-gradient-multi font-medium">
+            Architecte Solutions Digitales
+          </span>
+        </motion.p>
+
+        {/* CTA */}
+        <motion.div
+          className="flex flex-col sm:flex-row items-center gap-3 mt-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 3.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <a href="#projets" className="btn-apple text-sm">
+            Découvrir mes projets
+          </a>
+          <a href="#contact" className="btn-ghost text-sm">
+            Me contacter
+          </a>
+        </motion.div>
+
+        {/* Scroll cue */}
+        <motion.div
+          className="mt-12 sm:mt-16 flex flex-col items-center gap-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ delay: 4.5, duration: 1.5 }}
+        >
+          <motion.div
+            className="w-[1px] h-12 bg-gradient-to-b from-transparent via-label-tertiary to-transparent"
+            animate={{ scaleY: [0.4, 1, 0.4] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

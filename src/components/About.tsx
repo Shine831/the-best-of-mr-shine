@@ -1,207 +1,228 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import AnimatedText from "./AnimatedText";
 
 const stats = [
-  { label: "Années d'Expérience", value: 4, suffix: "+" },
-  { label: "Projets Déployés", value: 25, suffix: "+" },
-  { label: "Technologies Maîtrisées", value: 18, suffix: "" },
-  { label: "Clients Satisfaits", value: 15, suffix: "+" },
+  { value: "10+", label: "Projets livrés", accent: "#2997ff" },
+  { value: "15+", label: "Technologies", accent: "#bf5af2" },
+  { value: "2+", label: "Ans d'expérience", accent: "#30d158" },
+  { value: "100%", label: "Engagement", accent: "#ff375f" },
 ];
 
-function AnimatedCounter({
-  value,
-  suffix,
-  isInView,
-}: {
-  value: number;
-  suffix: string;
-  isInView: boolean;
-}) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!isInView) return;
-    let start = 0;
-    const duration = 2000;
-    const increment = value / (duration / 16);
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= value) {
-        setCount(value);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [isInView, value]);
-
-  return (
-    <span className="font-serif text-4xl md:text-5xl lg:text-6xl text-white tabular-nums">
-      {count}
-      {suffix}
-    </span>
-  );
-}
+const timeline = [
+  {
+    period: "Sept. 2023 — Août 2025",
+    title: "BTS Génie Informatique",
+    org: "Institut Universitaire des Leaders, Douala",
+    type: "Formation",
+    description: "Spécialité Génie Logiciel — Conception et développement de systèmes informatiques.",
+    accent: "#2997ff",
+    icon: "🎓",
+  },
+  {
+    period: "Juin 2024 — Août 2025",
+    title: "Développeur Web",
+    org: "KOZAD AFRICA, Ndogpassi III, Douala",
+    type: "Expérience",
+    description: "Développement Full Stack sur JJPlatform — Frontend, Backend, revues de code et documentation technique.",
+    accent: "#30d158",
+    icon: "💼",
+  },
+  {
+    period: "Juil. — Août 2024",
+    title: "Stagiaire",
+    org: "ASECNA, Aéroport de Douala",
+    type: "Stage",
+    description: "Projet GMAO — Suivi maintenance instruments météorologiques, modules CRUD, formulaires MySQL.",
+    accent: "#bf5af2",
+    icon: "✈️",
+  },
+];
 
 export default function About() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-20%" });
-
-  const bioWords =
-    "Jean Claude Schimit Baha — Architecte de Solutions Digitales basé à Douala. Je conçois des systèmes où chaque ligne de code sert un objectif stratégique. De l'ingénierie front-end cinématique à l'orchestration d'agents IA autonomes, mon approche fusionne rigueur technique et obsession du détail.".split(
-      " "
-    );
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const orbY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
 
   return (
-    <section
-      id="a-propos"
-      ref={ref}
-      className="relative py-32 md:py-40 bg-obsidian-950 overflow-hidden"
-    >
-      {/* Background glow */}
-      <div className="absolute top-0 right-0 w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(16,185,129,0.04),transparent_60%)] pointer-events-none z-[1]" />
+    <section id="parcours" ref={sectionRef} className="section-space relative overflow-hidden">
+      <div className="section-divider absolute top-0 left-0" />
 
-      <div className="max-w-[90rem] mx-auto px-4 md:px-8 lg:px-16">
-        {/* Section tag */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-20 md:mb-28"
-        >
-          <span className="font-mono text-[10px] md:text-xs tracking-[0.6em] text-emerald-500 uppercase flex items-center gap-4">
-            <span className="w-8 md:w-12 h-px bg-emerald-500/30" />À Propos
-          </span>
-        </motion.div>
+      {/* Parallax orbs */}
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: orbY }}>
+        <div className="orb orb-teal animate-orb-2 w-[350px] h-[350px]" style={{ top: "15%", left: "-8%", opacity: 0.12 }} />
+        <div className="orb orb-pink animate-orb-1 w-[300px] h-[300px]" style={{ bottom: "10%", right: "-5%", opacity: 0.1 }} />
+      </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* Left — Identity card */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      <div className="section-wrap relative z-10">
+        {/* Header */}
+        <div className="text-center mb-14 md:mb-20">
+          <motion.p
+            className="text-accent-teal text-xs font-semibold tracking-[0.25em] uppercase mb-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="relative"
           >
-            {/* Decorative frame with 3D Video Texture */}
-            <div className="relative glass-panel p-8 md:p-12 space-y-8 overflow-hidden group">
-              {/* Diegetic Video Background (2026 Trend) */}
-              <div 
-                className="absolute inset-0 z-0 opacity-20 group-hover:opacity-50 transition-opacity duration-1000 mix-blend-screen pointer-events-none" 
-                style={{ 
-                  maskImage: "linear-gradient(to bottom right, black 20%, transparent 80%)", 
-                  WebkitMaskImage: "linear-gradient(to bottom right, black 20%, transparent 80%)" 
-                }}
-              >
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000"
-                >
-                  <source src="/videos/about-bg.mp4" type="video/mp4" />
-                </video>
-              </div>
+            À propos
+          </motion.p>
+          <AnimatedText
+            text="L'histoire derrière le code."
+            tag="h2"
+            className="text-[clamp(1.75rem,5vw,3.5rem)] font-display font-bold text-label leading-[1.1]"
+          />
+        </div>
 
-              {/* Animated corner accents */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-emerald-500/30 z-10" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-emerald-500/30 z-10" />
+        {/* Bio + Timeline grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
+          {/* Bio */}
+          <motion.div
+            className="lg:col-span-7 glass-card p-6 sm:p-8 md:p-10"
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-px z-10" style={{ background: "linear-gradient(90deg, rgba(90,200,250,0.4), transparent 60%)" }} />
 
-              {/* Initials */}
-              <div className="relative z-10 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center backdrop-blur-md">
-                <span className="font-serif text-3xl md:text-4xl text-emerald-400 font-light">
-                  JC
+            <div className="relative z-10 space-y-5 text-sm sm:text-base leading-[1.8]">
+              <p className="text-label/90">
+                <span className="text-accent-teal font-semibold">Diplômé en BTS Génie Informatique</span>{" "}
+                — Spécialité Génie Logiciel, passionné par la création de solutions web qui fusionnent{" "}
+                <span className="text-label font-medium">élégance</span> et{" "}
+                <span className="text-label font-medium">performance</span>.
+              </p>
+
+              <p className="text-label-secondary">
+                Chez <span className="text-label/80">KOZAD AFRICA</span>, j&apos;ai développé des applications sur JJPlatform
+                — de l&apos;implémentation Frontend/Backend aux revues de code. À l&apos;
+                <span className="text-label/80">ASECNA</span>, j&apos;ai contribué au projet GMAO pour la maintenance
+                d&apos;instruments météorologiques aéroportuaires.
+              </p>
+
+              <p className="text-label-secondary">
+                Aujourd&apos;hui, je conçois des{" "}
+                <span className="text-gradient-multi font-medium">expériences web premium</span>,
+                j&apos;automatise les processus avec{" "}
+                <span className="text-accent-purple font-medium">Zapier & n8n</span> et je crée des{" "}
+                <span className="text-accent-green font-medium">agents IA autonomes</span> (Gemini, Google AI Studio, Claude). Je maîtrise également 
+                l&apos;écosystème Google (Google Tag Manager, GA4) et les dernières IA devs comme Jules et Stitch pour maximiser la qualité et la vélocité.
+              </p>
+            </div>
+
+            {/* Languages */}
+            <div className="grid grid-cols-2 gap-3 mt-7">
+              {[
+                { lang: "Français", level: "Courant", bars: 5, accent: "#2997ff" },
+                { lang: "Anglais", level: "Professionnel", bars: 4, accent: "#bf5af2" },
+              ].map((l) => (
+                <div key={l.lang} className="liquid-glass !rounded-xl p-4">
+                  <div className="relative z-10">
+                    <p className="text-[10px] text-label-tertiary uppercase tracking-wider mb-1">{l.lang}</p>
+                    <p className="text-sm font-semibold text-label">{l.level}</p>
+                    <div className="flex gap-1 mt-2">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-[3px] flex-1 rounded-full"
+                          style={{ backgroundColor: i < l.bars ? l.accent : "rgba(255,255,255,0.06)" }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Atouts */}
+            <div className="flex flex-wrap gap-2 mt-6">
+              {["Perfectionniste", "Créatif", "UI/UX Premium", "Autonome", "Agile"].map((a) => (
+                <span key={a} className="text-[10px] sm:text-xs px-3 py-1.5 rounded-full bg-accent-pink/8 text-accent-pink border border-accent-pink/15">
+                  {a}
                 </span>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-serif text-2xl md:text-3xl text-white uppercase tracking-tight">
-                  Jean Claude
-                  <br />
-                  <span className="text-zinc-500 italic">Schimit Baha</span>
-                </h3>
-                <p className="font-mono text-[10px] tracking-[0.4em] text-emerald-500 uppercase">
-                  Architecte Solutions Digitales
-                </p>
-              </div>
-
-              <div className="w-full h-px bg-gradient-to-r from-emerald-500/20 via-white/5 to-transparent" />
-
-              {/* Quick info pills */}
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "Douala, Cameroun",
-                  "Remote Worldwide",
-                  "Freelance",
-                ].map((item) => (
-                  <span
-                    key={item}
-                    className="px-3 py-1.5 rounded-full text-[10px] font-mono tracking-wider text-zinc-400 bg-white/[0.03] border border-white/[0.06]"
-                  >
-                    {item}
-                  </span>
-                ))}
-              </div>
+              ))}
             </div>
           </motion.div>
 
-          {/* Right — Bio text reveal */}
-          <div className="space-y-16">
-            <h3 className="font-serif text-3xl md:text-4xl lg:text-5xl text-zinc-100 font-extralight tracking-tight leading-[1.2]">
-              {bioWords.map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, filter: "blur(8px)", y: 10 }}
-                  whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: i * 0.03,
-                    ease: [0.215, 0.61, 0.355, 1],
-                  }}
-                  viewport={{ once: true, margin: "-5%" }}
-                  className="inline-block mr-[0.25em]"
+          {/* Timeline */}
+          <div className="lg:col-span-5 space-y-3">
+            {timeline.map((item, i) => {
+              const ref = useRef(null);
+              const inView = useInView(ref, { once: true, margin: "-60px" });
+              return (
+                <motion.div
+                  key={item.title}
+                  ref={ref}
+                  className="glass-card p-5 sm:p-6"
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.7, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  {word}
-                </motion.span>
-              ))}
-            </h3>
+                  <div className="absolute top-0 left-0 right-0 h-px z-10" style={{ background: `linear-gradient(90deg, ${item.accent}40, transparent 50%)` }} />
+                  <div className="relative z-10 flex items-start gap-4">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-base"
+                      style={{ background: `${item.accent}12` }}
+                    >
+                      {item.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-wider mb-0.5" style={{ color: item.accent }}>
+                        {item.type}
+                      </p>
+                      <h4 className="text-sm font-semibold text-label leading-tight">{item.title}</h4>
+                      <p className="text-xs text-label-secondary mt-0.5">{item.org}</p>
+                      <p className="text-[11px] text-label-tertiary mt-1.5 leading-relaxed">{item.description}</p>
+                      <p className="text-[10px] font-mono mt-2" style={{ color: `${item.accent}99` }}>
+                        {item.period}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Animated Counters Row */}
+        {/* Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          className="liquid-glass mt-10 md:mt-14 p-7 md:p-10"
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="mt-24 md:mt-32 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pt-12 border-t border-white/[0.06]"
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 + i * 0.1 }}
-              viewport={{ once: true }}
-              className="flex flex-col gap-2"
-            >
-              <AnimatedCounter
-                value={stat.value}
-                suffix={stat.suffix}
-                isInView={isInView}
-              />
-              <span className="font-mono text-[9px] md:text-[10px] tracking-[0.3em] text-zinc-500 uppercase">
-                {stat.label}
-              </span>
-            </motion.div>
-          ))}
+          <div className="absolute top-0 left-0 right-0 h-px z-10" style={{ background: "linear-gradient(90deg, transparent, rgba(41,151,255,0.25), transparent)" }} />
+          <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((s, i) => (
+              <StatItem key={s.label} stat={s} delay={i * 0.1} />
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function StatItem({ stat, delay }: { stat: (typeof stats)[number]; delay: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  return (
+    <motion.div
+      ref={ref}
+      className="text-center"
+      initial={{ opacity: 0, y: 25 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <p className="text-3xl sm:text-4xl md:text-5xl font-display font-bold" style={{ color: stat.accent }}>
+        {stat.value}
+      </p>
+      <p className="text-xs text-label-tertiary mt-1">{stat.label}</p>
+    </motion.div>
   );
 }

@@ -1,164 +1,154 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Quote } from "lucide-react";
+import AnimatedText from "./AnimatedText";
 
 const testimonials = [
   {
-    id: 1,
     quote:
-      "Un niveau de rigueur technique rare. Mon portfolio est devenu un aimant à clients premium. Le ROI a été immédiat.",
-    name: "Chamix",
-    role: "Directeur Artistique",
-    company: "CHAMIX GRAPHIC",
-    accentColor: "#DC143C",
+      "Jean Claude a transformé notre vision en une expérience digitale exceptionnelle. Son attention aux détails et sa maîtrise technique sont impressionnantes.",
+    name: "Marc Tientcheu",
+    role: "CEO, Startup Fintech",
+    initials: "MT",
+    accent: "#2997ff",
   },
   {
-    id: 2,
     quote:
-      "La refonte de notre plateforme a transformé notre présence digitale. Chaque détail est pensé pour la performance et l'impact.",
-    name: "E-Jarnauld",
-    role: "Gérant",
-    company: "E-JARNAULD SOFT",
-    accentColor: "#EE1C25",
+      "Les automatisations Zapier et n8n mises en place nous ont fait gagner plus de 20h par semaine. Un vrai game-changer pour notre productivité.",
+    name: "Sandrine Mbella",
+    role: "Directrice Opérations",
+    initials: "SM",
+    accent: "#30d158",
   },
   {
-    id: 3,
     quote:
-      "L'automatisation de nos workflows a réduit nos coûts opérationnels de 40%. Un architecte qui comprend les enjeux business.",
-    name: "Marc Essono",
-    role: "CEO",
-    company: "NEXAFLOW TECHNOLOGIES",
-    accentColor: "#10b981",
+      "Un travail premium de bout en bout. La web app livrée dépasse nos attentes tant en design qu'en performances techniques.",
+    name: "Paul Fotso",
+    role: "Fondateur, Agence Digitale",
+    initials: "PF",
+    accent: "#bf5af2",
+  },
+  {
+    quote:
+      "Collaborer avec Shine, c'est la garantie d'un résultat exceptionnel. Son approche créative et sa rigueur font toute la différence.",
+    name: "Aminata Diallo",
+    role: "Product Manager",
+    initials: "AD",
+    accent: "#ff375f",
   },
 ];
 
 export default function Testimonials() {
-  const [current, setCurrent] = useState(0);
+  const [active, setActive] = useState(0);
 
-  // Auto-rotate testimonials
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(timer);
+  const next = useCallback(() => {
+    setActive((p) => (p + 1) % testimonials.length);
   }, []);
 
+  // Auto-rotate
+  useEffect(() => {
+    const timer = setInterval(next, 5000);
+    return () => clearInterval(timer);
+  }, [next]);
+
+  const t = testimonials[active];
+
   return (
-    <section className="relative py-32 md:py-40 bg-obsidian-950 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(16,185,129,0.03),transparent_60%)] pointer-events-none" />
+    <section className="section-space relative overflow-hidden">
+      <div className="section-divider absolute top-0 left-0" />
 
-      <div className="max-w-[90rem] mx-auto px-4 md:px-8 lg:px-16">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="mb-20 md:mb-28 flex flex-col md:flex-row items-start md:items-end justify-between gap-8"
-        >
-          <div className="space-y-4">
-            <span className="font-mono text-[10px] md:text-xs tracking-[0.6em] text-emerald-500 uppercase flex items-center gap-4">
-              <span className="w-8 md:w-12 h-px bg-emerald-500/30" />
-              Retours clients
-            </span>
-            <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white tracking-tighter uppercase leading-none">
-              Ce qu&apos;ils<br />
-              <span className="italic text-zinc-500">en Disent</span>
-            </h2>
-          </div>
-        </motion.div>
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="orb orb-indigo animate-orb-2 w-[350px] h-[350px]" style={{ top: "20%", left: "-8%", opacity: 0.1 }} />
+      </div>
 
-        {/* Testimonial Card */}
-        <div className="relative max-w-4xl mx-auto">
-          {/* Large quote mark */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
+      <div className="section-wrap relative z-10">
+        {/* Header */}
+        <div className="text-center mb-14 md:mb-20">
+          <motion.p
+            className="text-accent-pink text-xs font-semibold tracking-[0.25em] uppercase mb-4"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="absolute -top-8 -left-4 md:-left-12 z-0"
           >
-            <Quote
-              className="w-16 h-16 md:w-24 md:h-24 text-emerald-500/10"
-              strokeWidth={1}
+            Témoignages
+          </motion.p>
+          <AnimatedText
+            text="Ils m'ont fait confiance."
+            tag="h2"
+            className="text-[clamp(1.75rem,5vw,3.5rem)] font-display font-bold text-label leading-[1.1]"
+          />
+        </div>
+
+        {/* Carousel */}
+        <motion.div
+          className="max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="liquid-glass p-8 sm:p-10 md:p-12 min-h-[260px] flex flex-col justify-center">
+            {/* Dynamic accent line */}
+            <div
+              className="absolute top-0 left-0 right-0 h-px z-10 transition-all duration-700"
+              style={{ background: `linear-gradient(90deg, transparent, ${t.accent}40, transparent)` }}
             />
-          </motion.div>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -30, filter: "blur(8px)" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-panel p-8 md:p-12 lg:p-16 relative z-10"
-            >
-              {/* Accent border top */}
-              <div
-                className="absolute top-0 left-0 w-full h-px"
-                style={{
-                  background: `linear-gradient(to right, transparent, ${testimonials[current].accentColor}50, transparent)`,
-                }}
-              />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 15, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -15, filter: "blur(6px)" }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="relative z-10 flex flex-col items-center text-center gap-6"
+              >
+                {/* Quote mark */}
+                <span className="text-3xl opacity-20 leading-none">&ldquo;</span>
 
-              <blockquote className="font-serif text-xl md:text-2xl lg:text-3xl text-zinc-100 font-extralight leading-relaxed tracking-tight mb-10">
-                &ldquo;{testimonials[current].quote}&rdquo;
-              </blockquote>
+                <p className="text-sm sm:text-base md:text-lg text-label/85 leading-relaxed max-w-xl">
+                  {t.quote}
+                </p>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  {/* Avatar initial */}
+                {/* Author */}
+                <div className="flex items-center gap-3">
                   <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center border"
-                    style={{
-                      borderColor: `${testimonials[current].accentColor}30`,
-                      backgroundColor: `${testimonials[current].accentColor}10`,
-                    }}
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                    style={{ background: `${t.accent}18`, color: t.accent }}
                   >
-                    <span
-                      className="font-serif text-lg"
-                      style={{ color: testimonials[current].accentColor }}
-                    >
-                      {testimonials[current].name[0]}
-                    </span>
+                    {t.initials}
                   </div>
-
-                  <div className="space-y-0.5">
-                    <p className="font-sans text-sm text-white font-medium">
-                      {testimonials[current].name}
-                    </p>
-                    <p className="font-mono text-[10px] tracking-[0.2em] text-zinc-500 uppercase">
-                      {testimonials[current].role} — {testimonials[current].company}
-                    </p>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-label">{t.name}</p>
+                    <p className="text-[11px] text-label-tertiary">{t.role}</p>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {/* Indicators */}
-          <div className="flex items-center justify-center gap-3 mt-8">
-            {testimonials.map((t, i) => (
+          {/* Dots */}
+          <div className="flex items-center justify-center gap-2.5 mt-6">
+            {testimonials.map((item, i) => (
               <button
-                key={t.id}
-                onClick={() => setCurrent(i)}
-                className="group relative p-2"
-                aria-label={`Voir le témoignage de ${t.name}`}
+                key={i}
+                onClick={() => setActive(i)}
+                className="relative p-1.5"
+                aria-label={`Témoignage ${i + 1}`}
               >
                 <div
-                  className={`w-8 h-1 rounded-full transition-all duration-500 ${
-                    i === current
-                      ? "bg-emerald-500 w-12"
-                      : "bg-white/10 hover:bg-white/20"
-                  }`}
+                  className="w-1.5 h-1.5 rounded-full transition-all duration-500"
+                  style={{
+                    background: i === active ? item.accent : "rgba(255,255,255,0.12)",
+                    transform: i === active ? "scale(1.6)" : "scale(1)",
+                    boxShadow: i === active ? `0 0 8px ${item.accent}50` : "none",
+                  }}
                 />
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
