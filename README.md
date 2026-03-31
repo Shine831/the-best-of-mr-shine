@@ -1,6 +1,6 @@
 # THE BEST OF MR SHINE ✦ Liquid Glass 2026
 
-![THE BEST OF MR SHINE Portfolio](https://portfolio-schimit.vercel.app/og.png)
+![THE BEST OF MR SHINE Portfolio](https://the-best-of-mr-shine.vercel.app/og.png)
 
 Bienvenue dans le code source de l'expérience numérique ultra-premium de **Jean Claude Schimit Baha**, un portfolio interactif combinant esthétisme cinématographique, animation fluide et performances de pointe.
 
@@ -43,8 +43,8 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) (version 18+ recommandée) e
 
 1. **Cloner le repository :**
     ```bash
-    git clone https://github.com/Shine831/the-best-of-mr-shine-git.git
-    cd the-best-of-mr-shine-git
+    git clone https://github.com/Shine831/the-best-of-mr-shine.git
+    cd the-best-of-mr-shine
     ```
 
 2. **Installer les dépendances :**
@@ -73,7 +73,7 @@ Assurez-vous d'avoir [Node.js](https://nodejs.org/) (version 18+ recommandée) e
 
 - **GitHub :** [@Shine831](https://github.com/Shine831)
 - **LinkedIn :** [Schmit Claude Baha](https://www.linkedin.com/in/schmit-claude-bha993b6)
-- **Live Site :** [portfolio-schimit.vercel.app](https://portfolio-schimit.vercel.app)
+- **Live Site :** [the-best-of-mr-shine.vercel.app](https://the-best-of-mr-shine.vercel.app)
 
 ---
 > _Conçu avec passion, performance et un sens maniaque du détail UX._

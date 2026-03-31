@@ -7,8 +7,8 @@ const siteConfig = {
   title: "THE BEST OF MR SHINE",
   description:
     "Développeur Web Full Stack & Architecte Solutions Digitales — Expériences numériques premium, automatisations IA et applications web performantes.",
-  url: "https://portfolio-schimit.vercel.app",
-  ogImage: "https://portfolio-schimit.vercel.app/og.png",
+  url: "https://the-best-of-mr-shine.vercel.app",
+  ogImage: "https://the-best-of-mr-shine.vercel.app/og.png",
   links: {
     github: "https://github.com/Shine831",
     linkedin: "https://www.linkedin.com/in/schmit-claude-bha993b6",
