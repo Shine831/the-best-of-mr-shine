@@ -24,7 +24,7 @@ const timeline = [
   {
     period: "Juin 2024 — Août 2025",
     title: "Développeur Web",
-    org: "KOZAD AFRICA, Ndogpassi III, Douala",
+    org: "KOZAO AFRICA, Ndogpassi III, Douala",
     type: "Expérience",
     description: "Développement Full Stack sur JJPlatform — Frontend, Backend, revues de code et documentation technique.",
     accent: "#30d158",
@@ -98,7 +98,7 @@ export default function About() {
               </p>
 
               <p className="text-label-secondary">
-                Chez <span className="text-label/80">KOZAD AFRICA</span>, j&apos;ai développé des applications sur JJPlatform
+                Chez <span className="text-label/80">KOZAO AFRICA</span>, j&apos;ai développé des applications sur JJPlatform
                 — de l&apos;implémentation Frontend/Backend aux revues de code. À l&apos;
                 <span className="text-label/80">ASECNA</span>, j&apos;ai contribué au projet GMAO pour la maintenance
                 d&apos;instruments météorologiques aéroportuaires.
@@ -118,7 +118,7 @@ export default function About() {
             <div className="grid grid-cols-2 gap-3 mt-7">
               {[
                 { lang: "Français", level: "Courant", bars: 5, accent: "#2997ff" },
-                { lang: "Anglais", level: "Professionnel", bars: 4, accent: "#bf5af2" },
+                { lang: "Anglais", level: "Intermédiaire", bars: 3, accent: "#bf5af2" },
               ].map((l) => (
                 <div key={l.lang} className="liquid-glass !rounded-xl p-4">
                   <div className="relative z-10">
