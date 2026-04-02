@@ -282,6 +282,16 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* ── Glow Pulse for Tech Pills ── */
+  .glow-pill {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glow-pill:hover {
+    box-shadow: 0 0 16px var(--glow-color, rgba(41,151,255,0.3)),
+                0 0 4px var(--glow-color, rgba(41,151,255,0.2));
+    transform: translateY(-1px);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════

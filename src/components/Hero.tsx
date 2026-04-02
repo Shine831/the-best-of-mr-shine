@@ -33,7 +33,7 @@ export default function Hero() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-24 md:pt-32"
+      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-28 md:pt-32"
     >
       {/* ── Three.js Orb ── */}
       <motion.div

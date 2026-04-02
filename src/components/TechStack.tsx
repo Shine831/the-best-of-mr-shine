@@ -70,12 +70,13 @@ function TechGroupCard({ group, index }: { group: (typeof techGroups)[number]; i
         {group.items.map((item, i) => (
           <motion.span
             key={item}
-            className="text-[11px] sm:text-xs font-medium px-3 py-1.5 rounded-full transition-all duration-300 cursor-default"
+            className="glow-pill text-[11px] sm:text-xs font-medium px-3 py-1.5 rounded-full cursor-default"
             style={{
               background: `${group.accent}08`,
               color: `${group.accent}cc`,
               border: `1px solid ${group.accent}18`,
-            }}
+              "--glow-color": `${group.accent}40`,
+            } as React.CSSProperties}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ delay: index * 0.12 + i * 0.04, duration: 0.5 }}
