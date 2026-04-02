@@ -4,6 +4,7 @@ import { useRef, Suspense } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
 import AnimatedText from "./AnimatedText";
+import MagneticButton from "./MagneticButton";
 
 const HeroOrb = dynamic(() => import("./HeroOrb"), {
   ssr: false,
@@ -118,12 +119,12 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 3.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <a href="#projets" className="btn-apple text-sm">
+          <MagneticButton as="a" href="#projets" className="btn-apple text-sm" data-cursor="Explorer">
             Découvrir mes projets
-          </a>
-          <a href="#contact" className="btn-ghost text-sm">
+          </MagneticButton>
+          <MagneticButton as="a" href="#contact" className="btn-ghost text-sm" data-cursor="Contact">
             Me contacter
-          </a>
+          </MagneticButton>
         </motion.div>
 
         {/* Scroll cue */}

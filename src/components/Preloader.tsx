@@ -10,19 +10,19 @@ export default function Preloader() {
   useEffect(() => {
     let frame: number;
     let start: number | null = null;
-    const duration = 1800;
+    const duration = 2200;
 
     const animate = (ts: number) => {
       if (!start) start = ts;
       const elapsed = ts - start;
       const p = Math.min(elapsed / duration, 1);
-      // Apple-like easing curve
-      const eased = 1 - Math.pow(1 - p, 3);
+      // Apple-style cubic easing
+      const eased = 1 - Math.pow(1 - p, 4);
       setProgress(eased * 100);
       if (p < 1) {
         frame = requestAnimationFrame(animate);
       } else {
-        setTimeout(() => setLoading(false), 500);
+        setTimeout(() => setLoading(false), 400);
       }
     };
 
@@ -35,8 +35,10 @@ export default function Preloader() {
       {loading && (
         <motion.div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-void"
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          exit={{
+            clipPath: "inset(0 0 100% 0)",
+          }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
         >
           {/* Ambient glow */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -45,22 +47,35 @@ export default function Preloader() {
           </div>
 
           <div className="relative z-10 flex flex-col items-center gap-8">
-            {/* Monogram */}
+            {/* Monogram with 3D perspective morph */}
             <motion.div
-              initial={{ scale: 0.5, opacity: 0, filter: "blur(30px)" }}
-              animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ scale: 0.3, opacity: 0, filter: "blur(30px)", rotateY: -90 }}
+              animate={{ scale: 1, opacity: 1, filter: "blur(0px)", rotateY: 0 }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+              style={{ perspective: 800 }}
             >
-              <div className="w-24 h-24 rounded-[1.75rem] liquid-glass flex items-center justify-center">
+              <motion.div
+                className="w-24 h-24 rounded-[1.75rem] liquid-glass flex items-center justify-center"
+                animate={{
+                  rotateY: [0, 5, -5, 0],
+                  rotateX: [0, -3, 3, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
                 <span className="text-3xl font-bold font-[var(--font-grotesk)] text-shimmer relative z-10">
                   S
                 </span>
-              </div>
+              </motion.div>
             </motion.div>
 
-            {/* Name */}
+            {/* Portfolio label */}
             <motion.div
-              className="flex flex-col items-center gap-1"
+              className="flex flex-col items-center gap-3"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -68,14 +83,26 @@ export default function Preloader() {
               <p className="text-label-tertiary text-xs tracking-[0.35em] uppercase">
                 Portfolio
               </p>
+
+              {/* Animated percentage counter */}
+              <motion.p
+                className="text-2xl font-mono font-light tabular-nums"
+                style={{
+                  background: "linear-gradient(135deg, #2997ff, #bf5af2)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                {Math.round(progress)}%
+              </motion.p>
             </motion.div>
 
             {/* Progress bar */}
             <motion.div
-              className="w-40 h-[2px] rounded-full overflow-hidden"
+              className="w-48 h-[2px] rounded-full overflow-hidden"
               style={{ background: "rgba(255,255,255,0.06)" }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, scaleX: 0.5 }}
+              animate={{ opacity: 1, scaleX: 1 }}
               transition={{ delay: 0.8 }}
             >
               <div
@@ -83,6 +110,7 @@ export default function Preloader() {
                 style={{
                   width: `${progress}%`,
                   background: "linear-gradient(90deg, #2997ff, #bf5af2, #ff375f)",
+                  boxShadow: "0 0 12px rgba(41,151,255,0.5)",
                 }}
               />
             </motion.div>

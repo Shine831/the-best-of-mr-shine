@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import AnimatedText from "./AnimatedText";
 
@@ -211,6 +211,36 @@ export default function About() {
 function StatItem({ stat, delay }: { stat: (typeof stats)[number]; delay: number }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+  const [displayed, setDisplayed] = useState(stat.value);
+
+  useEffect(() => {
+    if (!inView) return;
+
+    // Extract numeric part
+    const numMatch = stat.value.match(/(\d+)/);
+    if (!numMatch) return;
+
+    const target = parseInt(numMatch[1], 10);
+    const suffix = stat.value.replace(/\d+/, "");
+    const duration = 1800;
+    let start: number | null = null;
+    let frame: number;
+
+    const animate = (ts: number) => {
+      if (!start) start = ts;
+      const elapsed = ts - start;
+      const p = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - p, 3);
+      const current = Math.round(eased * target);
+      setDisplayed(`${current}${suffix}`);
+      if (p < 1) frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, stat.value]);
+
   return (
     <motion.div
       ref={ref}
@@ -219,8 +249,8 @@ function StatItem({ stat, delay }: { stat: (typeof stats)[number]; delay: number
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
-      <p className="text-3xl sm:text-4xl md:text-5xl font-display font-bold" style={{ color: stat.accent }}>
-        {stat.value}
+      <p className="text-3xl sm:text-4xl md:text-5xl font-display font-bold tabular-nums" style={{ color: stat.accent }}>
+        {displayed}
       </p>
       <p className="text-xs text-label-tertiary mt-1">{stat.label}</p>
     </motion.div>

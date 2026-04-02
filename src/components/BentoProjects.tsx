@@ -207,6 +207,7 @@ export default function BentoProjects() {
                 onClick={() => paginate(-1)}
                 className="w-12 h-12 rounded-full glass-card flex items-center justify-center text-label hover:bg-white/10 transition-colors border-white/10"
                 aria-label="Projet précédent"
+                data-cursor="Préc."
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
@@ -214,6 +215,7 @@ export default function BentoProjects() {
                 onClick={() => paginate(1)}
                 className="w-12 h-12 rounded-full glass-card flex items-center justify-center text-label hover:bg-white/10 transition-colors border-white/10"
                 aria-label="Projet suivant"
+                data-cursor="Suiv."
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -234,7 +236,7 @@ export default function BentoProjects() {
 
           {/* Right Column: Image Carousel */}
           <div className="lg:col-span-8 order-1 lg:order-2">
-            <div className="relative w-full aspect-[4/3] md:aspect-[16/10] rounded-2xl md:rounded-3xl overflow-hidden glass-card p-1 sm:p-2 border-white/10">
+            <div className="relative w-full aspect-[4/3] md:aspect-[16/10] rounded-2xl md:rounded-3xl overflow-hidden glass-card p-1 sm:p-2 border-white/10" data-cursor="Voir">
               {/* Image Container with AnimatePresence */}
               <div className="relative w-full h-full rounded-xl md:rounded-2xl overflow-hidden bg-void">
                 <AnimatePresence initial={false} custom={direction}>

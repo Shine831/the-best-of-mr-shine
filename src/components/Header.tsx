@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 
 const navItems = [
   { label: "Projets", href: "#projets" },
@@ -26,14 +26,34 @@ export function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  // Scroll progress
+  const { scrollYProgress } = useScroll();
+  const [scrollProgress, setScrollProgress] = useState(0);
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollProgress(latest);
+  });
+
+  // Hide/show on scroll direction
+  const [lastY, setLastY] = useState(0);
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setHidden(currentY > lastY && currentY > 100);
+      setLastY(currentY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastY]);
+
   return (
     <>
       {/* ─── Apple Floating Pill Navigation ─── */}
       <motion.nav
         className="nav-pill"
         initial={{ y: -80, opacity: 0 }}
-        animate={visible ? { y: 0, opacity: 1 } : {}}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        animate={visible ? { y: hidden ? -80 : 0, opacity: hidden ? 0 : 1 } : {}}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Logo */}
         <a
@@ -88,6 +108,17 @@ export function Header() {
           />
         </button>
       </motion.nav>
+
+      {/* ─── Scroll Progress Bar ─── */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 z-[201] h-[2px] origin-left"
+        style={{
+          scaleX: scrollProgress,
+          background: "linear-gradient(90deg, #2997ff, #bf5af2, #ff375f)",
+          opacity: scrollProgress > 0.01 ? 0.8 : 0,
+          boxShadow: "0 0 8px rgba(41,151,255,0.4)",
+        }}
+      />
 
       {/* ─── Mobile Fullscreen Menu ─── */}
       <AnimatePresence>
