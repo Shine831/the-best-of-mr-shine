@@ -7,18 +7,25 @@ export default function CursorFollower() {
   const [visible, setVisible] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [label, setLabel] = useState("");
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(true); // Default true to prevent flash on mobile
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
+  // Main cursor spring
   const springConfig = { damping: 28, stiffness: 180, mass: 0.5 };
   const x = useSpring(cursorX, springConfig);
   const y = useSpring(cursorY, springConfig);
 
+  // Outer ring spring (must be declared at top level — Rules of Hooks)
+  const ringX = useSpring(cursorX, { damping: 45, stiffness: 120, mass: 0.8 });
+  const ringY = useSpring(cursorY, { damping: 45, stiffness: 120, mass: 0.8 });
+
   useEffect(() => {
-    // Detect touch devices
-    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    // Detect touch devices safely (runs only in browser)
+    const isTouch =
+      typeof window !== "undefined" &&
+      ("ontouchstart" in window || navigator.maxTouchPoints > 0);
     setIsTouchDevice(isTouch);
     if (isTouch) return;
 
@@ -70,6 +77,7 @@ export default function CursorFollower() {
     };
   }, [cursorX, cursorY, visible]);
 
+  // Don't render anything on touch devices
   if (isTouchDevice) return null;
 
   return (
@@ -116,10 +124,7 @@ export default function CursorFollower() {
       {/* Outer ring — follows with more lag */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9998]"
-        style={{
-          x: useSpring(cursorX, { damping: 45, stiffness: 120, mass: 0.8 }),
-          y: useSpring(cursorY, { damping: 45, stiffness: 120, mass: 0.8 }),
-        }}
+        style={{ x: ringX, y: ringY }}
         animate={{
           opacity: visible && !hovered ? 0.4 : 0,
           scale: 1,
@@ -137,13 +142,6 @@ export default function CursorFollower() {
           }}
         />
       </motion.div>
-
-      {/* Global cursor hide */}
-      <style jsx global>{`
-        * {
-          cursor: none !important;
-        }
-      `}</style>
     </>
   );
 }
